@@ -1,4 +1,5 @@
 #include "ns_grid.h"
+#include "time.h"
 
 namespace Core {
 
@@ -6,9 +7,9 @@ namespace Core {
 NS_Grid::NS_Grid(const int _N) :
     N(_N)
 {
+    size = (N+2) * (N+2);
     set_conf();
-    set_density_src();
-    set_velocity_src();
+    set_src();
 }
 
 NS_Grid::~NS_Grid() {
@@ -26,8 +27,6 @@ void NS_Grid::dispose_conf() {
 }
 
 void NS_Grid::set_conf() {
-    int size = (N+2) * (N+2);
-
     u = new float[size];
     v = new float[size];
     dens = new float[size];
@@ -45,12 +44,10 @@ float NS_Grid::density(int i, int j) const {
 }
 
 float NS_Grid::min_dens() const {
-    int size = (N+2) * (N+2);
     return get_min(size, dens);
 }
 
 float NS_Grid::max_dens() const {
-    int size = (N+2) * (N+2);
     return get_max(size, dens);
 }
 //-------------------------------------------------------------------------------------------------
@@ -76,7 +73,29 @@ float get_max(int size, float * array) {
 
     return max;
 }
+
+void fill_random(int size, float * src, float from, float to) {
+    float factor = to - from;
+
+    for (int i = 0; i < size; i++) {
+         float num = qrand();
+         src[i] = num / RAND_MAX * factor + from;
+    }
+}
+
 //-------------------------------------------------------------------------------------------------
+void NS_Grid::set_src() {
+//    set_density_src();
+//    set_velocity_src();
+
+    uint T = time(NULL);
+    qsrand(T);
+
+    fill_random(size, u_src, -3, 3);
+    fill_random(size, v_src, -3, 3);
+    fill_random(size, dens_src, -1, 1);
+}
+
 void NS_Grid::set_density_src() {
     dens_src[IX(5,5)] = 1;
     dens_src[IX(15, 12)] = -0.5;

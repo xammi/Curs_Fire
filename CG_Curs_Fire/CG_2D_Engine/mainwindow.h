@@ -20,7 +20,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 private slots:
-    void simulate();
+    void start_simulation();
 
 public:
     explicit MainWindow(QWidget * parent = 0);
@@ -28,6 +28,9 @@ public:
 
 protected:
     void paintEvent(QPaintEvent *);
+    void timerEvent(QTimerEvent *);
+
+    void paintGrid(QPainter &);
 
 private:
     NS_Solver * solver;
@@ -35,8 +38,7 @@ private:
     int N;
 
     Ui::MainWindow * ui;
-
-    bool simulating;
+    int sim_timer;
 };
 //-------------------------------------------------------------------------------------------------
 #endif // MAINWINDOW_H

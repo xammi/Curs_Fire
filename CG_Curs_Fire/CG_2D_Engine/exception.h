@@ -2,6 +2,7 @@
 #define EXCEPTION_H
 
 #include <QString>
+#include <QDebug>
 
 struct Exception {
     virtual QString to_string() = 0;

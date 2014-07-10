@@ -18,8 +18,7 @@ public:
     NS_Grid(const int);
     ~NS_Grid();
 
-    void set_density_src();
-    void set_velocity_src();
+    void set_src();
 
     bool correct_N(int _N) const { return N == _N; }
 
@@ -31,8 +30,12 @@ private:
     void set_conf();
     void dispose_conf();
 
+    void set_density_src();
+    void set_velocity_src();
+
 private:
     int N;
+    int size;
 
     float * u, * u_src;
     float * v, * v_src;
@@ -41,6 +44,8 @@ private:
 //-------------------------------------------------------------------------------------------------
 // engine utils
 void assign(int size, float * src, float * array);
+void fill_random(int size, float * src, float from, float to);
+
 float get_max(int size, float * array);
 float get_min(int size, float * array);
 

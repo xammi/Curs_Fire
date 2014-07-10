@@ -1,17 +1,33 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+#include <time.h>
+
+typedef struct timespec Time;
+
+Time get_Time() {
+    Time gettime_now;
+    clock_gettime(CLOCK_PROCESS_CPUTIME_ID, & gettime_now);
+    return gettime_now;
+}
+
+double get_End_Time(Time start_time) {
+    Time end_time = get_Time();
+    double sec = double(end_time.tv_sec - start_time.tv_sec) * 1000;
+    double nsec = double(end_time.tv_nsec - start_time.tv_nsec) / 1000000;
+    return sec + nsec;
+}
+//-------------------------------------------------------------------------------------------------
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow),
-    simulating(true)
+    ui(new Ui::MainWindow)
 {
-    N = 100;
+    N = 60;
     solver = new NS_Solver(N, 0.125, 0.015, 0.1);
     grid = new NS_Grid(N);
 
     ui->setupUi(this);
-    connect(ui->simulate, SIGNAL(pressed()), SLOT(simulate()));
+    connect(ui->simulate, SIGNAL(pressed()), SLOT(start_simulation()));
 
     setWindowState(Qt::WindowMaximized);
 }
@@ -20,9 +36,21 @@ MainWindow::~MainWindow() {
     delete ui;
 }
 
+void MainWindow::timerEvent(QTimerEvent * event) {
+    if (event->timerId() == sim_timer) {
+
+        // Time time = get_Time();
+        solver->solver_step(N, *grid);
+        this->update();
+        // qDebug() << get_End_Time(time);
+
+    }
+}
+
 //-------------------------------------------------------------------------------------------------
-void MainWindow::simulate() {
-    solver->solver_step(N, *grid);
+void MainWindow::start_simulation() {
+    sim_timer = startTimer(500);
+    grid->set_src();
     this->update();
 }
 
@@ -33,7 +61,11 @@ void MainWindow::paintEvent(QPaintEvent *) {
     painter.fillRect(ui->view->rect(), QBrush(Qt::white));
     painter.setClipRect(ui->view->rect());
 
-    int width = 2, height = 2;
+    paintGrid(painter);
+}
+
+void MainWindow::paintGrid(QPainter & painter) {
+    int width = 5, height = 5;
     int i, j, x, y;
 
     QColor color;
