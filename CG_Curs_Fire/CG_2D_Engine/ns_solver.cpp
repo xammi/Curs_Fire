@@ -131,38 +131,15 @@ void NS_Solver::vel_step(float * u, float * v, float * u0, float * v0) {
 }
 
 void NS_Solver::solver_step(int _N, float * dens, float * dens0, float * u, float * v, float * u0, float * v0) {
+    if (! correct_N(_N))
+        throw Wrong_N();
+
     vel_step(u, v, u0, v0);
     dens_step(dens, dens0, u, v);
 }
 
-//-------------------------------------------------------------------------------------------------
-void NS_Solver::assign(float * src, float * array) {
-    for (int i = 0; i < size; i++)
-        array[i] = src[i];
-}
-
-float NS_Solver::get_min(float * array) {
-//    if (N == 0)
-//        throw EmptyArray();
-
-    float min = array[0];
-    for (int i = 1; i < size; i++)
-        if (min > array[i])
-            min = array[i];
-
-    return min;
-}
-
-float NS_Solver::get_max(float * array) {
-//    if (N == 0)
-//        throw EmptyArray();
-
-    float max = array[0];
-    for (int i = 1; i < size; i++)
-        if (max < array[i])
-            max = array[i];
-
-    return max;
+void NS_Solver::solver_step(int _N, const NS_Grid & grid) {
+    solver_step(_N, grid.dens, grid.dens_src, grid.u, grid.v, grid.u_src, grid.v_src);
 }
 
 //-------------------------------------------------------------------------------------------------

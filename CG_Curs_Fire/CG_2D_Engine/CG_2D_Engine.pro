@@ -15,9 +15,12 @@ CONFIG += c++11
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    ns_solver.cpp
+    ns_solver.cpp \
+    ns_grid.cpp
 
 HEADERS  += mainwindow.h \
-    ns_solver.h
+    ns_solver.h \
+    ns_grid.h \
+    exception.h
 
 FORMS    += mainwindow.ui

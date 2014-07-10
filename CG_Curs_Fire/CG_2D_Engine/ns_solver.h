@@ -1,9 +1,10 @@
 #ifndef ENGINE_H
 #define ENGINE_H
 
+#include "ns_grid.h"
+
 namespace Core {
 
-#define IX(i, j) ((i) + (N+2) * (j))
 #define SWAP(x0, x) { float * tmp = x0; x0 = x; x = tmp; }
 
 //-------------------------------------------------------------------------------------------------
@@ -13,11 +14,9 @@ public:
     NS_Solver(int _N, float _visc, float _diff, float _dt);
     ~NS_Solver();
 
-    // engine utils
-    void assign(float * src, float * array);
-    float get_max(float * array);
-    float get_min(float * array);
+    bool correct_N(int _N) const { return N == _N; }
 
+    void solver_step(int _N, const NS_Grid &);
     void solver_step(int _N, float * x, float * x0, float * u, float * v, float * u0, float * v0);
 
 private:
@@ -43,6 +42,10 @@ private:
     float dt;
 };
 //-------------------------------------------------------------------------------------------------
+
+struct Wrong_N : public Exception {
+    QString to_string() { return "Sent N does not correspond the initial one"; }
+};
 
 } // namespace Core
 

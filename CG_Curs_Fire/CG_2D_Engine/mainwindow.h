@@ -6,6 +6,7 @@
 #include <QThread>
 
 #include "ns_solver.h"
+#include "ns_grid.h"
 
 using namespace Core;
 
@@ -22,27 +23,18 @@ private slots:
     void simulate();
 
 public:
-    explicit MainWindow(QWidget *parent = 0);
+    explicit MainWindow(QWidget * parent = 0);
     ~MainWindow();
 
 protected:
     void paintEvent(QPaintEvent *);
 
 private:
-    void set_conf();
-    void dispose_conf();
-
-    void set_density_src();
-    void set_velocity_src();
-
-    NS_Solver solver;
+    NS_Solver * solver;
+    NS_Grid * grid;
     int N;
 
-    float * u, * u_prev;
-    float * v, * v_prev;
-    float * dens, * dens_prev;
-
-    Ui::MainWindow *ui;
+    Ui::MainWindow * ui;
 
     bool simulating;
 };
