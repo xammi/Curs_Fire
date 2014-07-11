@@ -1,7 +1,7 @@
 #ifndef SCENE_H
 #define SCENE_H
 
-#include "Drawable.h"
+#include "Geometry/Drawable.h"
 
 //-------------------------------------------------------------------------------------------------
 class Scene : public QObject

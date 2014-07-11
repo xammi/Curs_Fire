@@ -49,7 +49,7 @@ void MainWindow::timerEvent(QTimerEvent * event) {
 
 //-------------------------------------------------------------------------------------------------
 void MainWindow::start_simulation() {
-    sim_timer = startTimer(500);
+    sim_timer = startTimer(50);
     grid->set_src();
     this->update();
 }
