@@ -9,6 +9,8 @@
 #include <QString>
 
 #include <QPainter>
+#include <QPoint>
+#include <QPointF>
 
 #include <functional>
 using std::function;

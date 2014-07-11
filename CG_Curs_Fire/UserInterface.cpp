@@ -24,6 +24,7 @@ void UserInterface::paintEvent(QPaintEvent *) {
     QPainter painter(this);
     painter.translate(ui->view->pos());
     painter.fillRect(ui->view->rect(), QBrush(Qt::white));
+    painter.setClipRect(ui->view->rect());
 
     scene->setScreen(ui->view->size());
 }

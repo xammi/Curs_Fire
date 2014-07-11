@@ -1,7 +1,7 @@
 #ifndef SCENE_H
 #define SCENE_H
 
-#include "Geometry/Drawable.h"
+#include "Geometry/Obstacle.h"
 
 //-------------------------------------------------------------------------------------------------
 class Scene : public QObject
@@ -16,7 +16,11 @@ signals:
 
 public:
     explicit Scene(QObject * parent = 0);
+    ~Scene();
+
     void setScreen(const QSize &);
+    void setDefault();
+    void draw(QPainter &) const;
 
 private:
     Draws draws;

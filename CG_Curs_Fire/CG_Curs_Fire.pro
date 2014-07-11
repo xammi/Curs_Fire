@@ -15,13 +15,15 @@ CONFIG += c++11
 SOURCES += main.cpp\
         UserInterface.cpp \
     Scene.cpp \
-    Geometry/Point3d.cpp \
-    Geometry/Drawable.cpp
+    Geometry/Drawable.cpp \
+    Geometry/Obstacle.cpp \
+    Geometry/Prims3d.cpp
 
 HEADERS  += UserInterface.h \
     includes.h \
     Scene.h \
     Geometry/Drawable.h \
-    Geometry/Point3d.h
+    Geometry/Obstacle.h \
+    Geometry/Prims3d.h
 
 FORMS    += UserInterface.ui
