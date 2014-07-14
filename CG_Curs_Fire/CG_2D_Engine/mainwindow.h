@@ -30,8 +30,6 @@ protected:
     void paintEvent(QPaintEvent *);
     void timerEvent(QTimerEvent *);
 
-    void paintGrid(QPainter &);
-
 private:
     NS_Solver * solver;
     NS_Grid * grid;

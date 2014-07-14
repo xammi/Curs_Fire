@@ -2,6 +2,8 @@
 
 namespace Core {
 
+const int ITERS = 20;
+
 NS_Solver::NS_Solver(int _N, float _visc, float _diff, float _dt) :
     N(_N), visc(_visc), diff(_diff), dt(_dt)
 {
@@ -35,7 +37,7 @@ void NS_Solver::diffuse(int b, float * x, float * x0) {
     int i, j, k;
     float a = dt * diff * N * N;
 
-    for (k = 0; k < 20; k++) {
+    for (k = 0; k < ITERS; k++) {
         for (i = 1; i <= N; i++)
             for (j = 1; j <= N; j++)
                 x[IX(i,j)] = (x0[IX(i,j)] + a*( x[IX(i-1,j)] + x[IX(i+1,j)] + x[IX(i,j-1)] + x[IX(i,j+1)] )) / (1 + 4*a);
@@ -88,7 +90,7 @@ void NS_Solver::project(float * u, float * v, float * p, float * div) {
     set_bnd(0, div);
     set_bnd(0, p);
 
-    for (k = 0; k < 20; k++) {
+    for (k = 0; k < ITERS; k++) {
         for (i = 1; i <= N; i++)
             for (j = 1; j <= N; j++) {
                 p[IX(i,j)] = (div[IX(i,j)] + p[IX(i-1,j)] + p[IX(i+1,j)] + p[IX(i,j-1)] + p[IX(i,j+1)]) / 4;
