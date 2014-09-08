@@ -15,12 +15,20 @@ CONFIG += c++11
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    ns_solver.cpp \
-    ns_grid.cpp
+    usual/ns_solver.cpp \
+    usual/ns_grid.cpp \
+    integral/int_solver.cpp \
+    asolver.cpp \
+    integral/int_grid.cpp \
+    agrid.cpp
 
 HEADERS  += mainwindow.h \
-    ns_solver.h \
-    ns_grid.h \
-    exception.h
+    usual/ns_solver.h \
+    usual/ns_grid.h \
+    exception.h \
+    integral/int_solver.h \
+    asolver.h \
+    integral/int_grid.h \
+    agrid.h
 
 FORMS    += mainwindow.ui

@@ -1,25 +1,26 @@
-#ifndef ENGINE_H
-#define ENGINE_H
+#ifndef INT_SOLVER_H
+#define INT_SOLVER_H
 
-#include "ns_grid.h"
+#include "../asolver.h"
+#include "int_grid.h"
 
 namespace Core {
 
 #define SWAP(x0, x) { float * tmp = x0; x0 = x; x = tmp; }
 
 //-------------------------------------------------------------------------------------------------
-class NS_Solver // NS = Navier-Stokes
+/*
+ * The Integral implementation of the Navier-Stocks Solver.
+*/
+class Int_NS_Solver : public AbstractSolver
 {
 public:
-    NS_Solver(int _N, float _visc, float _diff, float _dt);
-    ~NS_Solver();
+    Int_NS_Solver(int _N, float _visc, float _diff, float _dt);
 
-    bool correct_N(int _N) const { return N == _N; }
-
-    void solver_step(int _N, const NS_Grid &);
+    void solver_step(int _N, const Int_NS_Grid &);
     void solver_step(int _N, float * x, float * x0, float * u, float * v, float * u0, float * v0);
 
-private:
+protected:
     // general solver utils
     void add_source(float * x, float * s);
     void set_bnd(int b, float * x);
@@ -33,20 +34,12 @@ private:
     void project(float * u, float * v, float * p, float * div);
     void vel_step(float * u, float * v, float * u0, float * v0);
 
-private:
-    int N;
-    int size;
-
+protected:
     float visc;
     float diff;
     float dt;
 };
 //-------------------------------------------------------------------------------------------------
-
-struct Wrong_N : public Exception {
-    QString to_string() { return "Sent N does not correspond the initial one"; }
-};
-
 } // namespace Core
 
-#endif // ENGINE_H
+#endif // INT_SOLVER_H

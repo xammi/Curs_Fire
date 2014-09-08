@@ -1,24 +1,23 @@
-#include "ns_solver.h"
+#include "int_solver.h"
 
 namespace Core {
 
 const int ITERS = 20;
 
-NS_Solver::NS_Solver(int _N, float _visc, float _diff, float _dt) :
-    N(_N), visc(_visc), diff(_diff), dt(_dt)
-{
-    size = (N+2) * (N+2);
-}
-
-NS_Solver::~NS_Solver() {}
 //-------------------------------------------------------------------------------------------------
-void NS_Solver::add_source(float * x, float * s) {
+Int_NS_Solver::Int_NS_Solver(int _N, float _visc, float _diff, float _dt) :
+    AbstractSolver(_N), visc(_visc), diff(_diff), dt(_dt)
+{
+
+}
+//-------------------------------------------------------------------------------------------------
+void Int_NS_Solver::add_source(float * x, float * s) {
     int i = 0;
     for (; i < size; i++)
         x[i] += dt * s[i];
 }
 
-void NS_Solver::set_bnd(int b, float * x) {
+void Int_NS_Solver::set_bnd(int b, float * x) {
     int i;
 
     for (i = 1; i <= N; i++) {
@@ -33,7 +32,7 @@ void NS_Solver::set_bnd(int b, float * x) {
     x[IX(N+1,N+1)] = 0.5 * (x[IX(N,N+1)] + x[IX(N+1,N)]);
 }
 
-void NS_Solver::diffuse(int b, float * x, float * x0) {
+void Int_NS_Solver::diffuse(int b, float * x, float * x0) {
     int i, j, k;
     float a = dt * diff * N * N;
 
@@ -45,7 +44,7 @@ void NS_Solver::diffuse(int b, float * x, float * x0) {
     }
 }
 
-void NS_Solver::advect(int b, float * d, float * d0, float * u, float * v) {
+void Int_NS_Solver::advect(int b, float * d, float * d0, float * u, float * v) {
     int i, j, i0, j0, i1, j1;
     float x, y, s0, t0, s1, t1, dt0;
 
@@ -54,7 +53,7 @@ void NS_Solver::advect(int b, float * d, float * d0, float * u, float * v) {
         for (j = 1; j <= N; j++) {
             x = i - dt0 * u[IX(i,j)];
             y = j - dt0 * v[IX(i,j)];
-            
+
             if (x < 0.5) x = 0.5;
             if (x > N + 0.5) x = N + 0.5;
             i0 = (int) x;
@@ -77,7 +76,7 @@ void NS_Solver::advect(int b, float * d, float * d0, float * u, float * v) {
     set_bnd(b, d);
 }
 
-void NS_Solver::project(float * u, float * v, float * p, float * div) {
+void Int_NS_Solver::project(float * u, float * v, float * p, float * div) {
     int i, j, k;
     float h = 1.0 / N;
 
@@ -108,7 +107,7 @@ void NS_Solver::project(float * u, float * v, float * p, float * div) {
     set_bnd(2, v);
 }
 
-void NS_Solver::dens_step(float * x, float * x0, float * u, float * v) {
+void Int_NS_Solver::dens_step(float * x, float * x0, float * u, float * v) {
     add_source(x, x0);
     SWAP(x0, x);
     diffuse(0, x, x0);
@@ -116,7 +115,7 @@ void NS_Solver::dens_step(float * x, float * x0, float * u, float * v) {
     advect(0, x, x0, u, v);
 }
 
-void NS_Solver::vel_step(float * u, float * v, float * u0, float * v0) {
+void Int_NS_Solver::vel_step(float * u, float * v, float * u0, float * v0) {
     add_source(u, u0);
     add_source(v, v0);
     SWAP(u0, u);
@@ -132,7 +131,7 @@ void NS_Solver::vel_step(float * u, float * v, float * u0, float * v0) {
     project(u, v, u0, v0);
 }
 
-void NS_Solver::solver_step(int _N, float * dens, float * dens0, float * u, float * v, float * u0, float * v0) {
+void Int_NS_Solver::solver_step(int _N, float * dens, float * dens0, float * u, float * v, float * u0, float * v0) {
     if (! correct_N(_N))
         throw Wrong_N();
 
@@ -140,7 +139,7 @@ void NS_Solver::solver_step(int _N, float * dens, float * dens0, float * u, floa
     dens_step(dens, dens0, u, v);
 }
 
-void NS_Solver::solver_step(int _N, const NS_Grid & grid) {
+void Int_NS_Solver::solver_step(int _N, const Int_NS_Grid &grid) {
     solver_step(_N, grid.dens, grid.dens_src, grid.u, grid.v, grid.u_src, grid.v_src);
 }
 

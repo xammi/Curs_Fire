@@ -23,8 +23,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     N = 60;
-    solver = new NS_Solver(N, 0.01, 0.0002, 0.1);
-    grid = new NS_Grid(N);
+    solver = new Int_NS_Solver(N, 0.01, 0.0002, 0.1);
+    grid = new Int_NS_Grid(N);
 
     ui->setupUi(this);
     connect(ui->simulate, SIGNAL(pressed()), SLOT(start_simulation()));

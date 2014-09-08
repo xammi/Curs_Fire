@@ -1,8 +1,7 @@
 #ifndef NS_GRID_H
 #define NS_GRID_H
 
-#include "exception.h"
-#include "tuple"
+#include "../agrid.h"
 
 #include <QColor>
 #include <QPainter>
@@ -11,9 +10,8 @@ namespace Core {
 
 #define IX(i, j) ((i) + (N+2) * (j))
 
-class NS_Solver;
 //-------------------------------------------------------------------------------------------------
-class NS_Grid
+class NS_Grid : public AbstractGrid
 {
     friend class NS_Solver;
 
@@ -53,16 +51,6 @@ private:
     float * dens, * dens_src;
 };
 //-------------------------------------------------------------------------------------------------
-// engine utils
-void assign(int size, float * src, float * array);
-void fill_random(int size, float * src, float from, float to);
-
-float get_max(int size, float * array);
-float get_min(int size, float * array);
-
-struct MemNotAlloc : public Exception {
-    QString to_string() { return "Memory for grid was not allocated"; }
-};
 
 } // namespace Core
 

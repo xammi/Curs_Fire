@@ -5,8 +5,8 @@
 #include <QPainter>
 #include <QThread>
 
-#include "ns_solver.h"
-#include "ns_grid.h"
+#include "usual/ns_solver.h"
+#include "integral/int_solver.h"
 
 using namespace Core;
 
@@ -31,8 +31,8 @@ protected:
     void timerEvent(QTimerEvent *);
 
 private:
-    NS_Solver * solver;
-    NS_Grid * grid;
+    Int_NS_Solver * solver;
+    Int_NS_Grid * grid;
     int N;
 
     Ui::MainWindow * ui;
