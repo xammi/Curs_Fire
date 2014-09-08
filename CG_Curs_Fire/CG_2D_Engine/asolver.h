@@ -16,8 +16,8 @@ public:
     bool correct_N(int _N) const { return N == _N; }
 
 protected:
-    int N;
-    int size;
+    const int N;
+    const int size;
 };
 
 //-------------------------------------------------------------------------------------------------

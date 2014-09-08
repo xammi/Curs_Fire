@@ -5,12 +5,11 @@ namespace Core {
 
 //-------------------------------------------------------------------------------------------------
 NS_Grid::NS_Grid(const int _N) :
-    N(_N)
+    AbstractGrid(_N)
 {
     uint T = time(NULL);
     qsrand(T);
 
-    size = (N+2) * (N+2);
     set_conf();
     set_src();
 }
@@ -54,6 +53,14 @@ float NS_Grid::max_dens() const {
     return get_max(size, dens);
 }
 
+void NS_Grid::fill_random(float * src, float from, float to) {
+    float factor = to - from;
+
+    for (int i = 0; i < size; i++) {
+         float num = qrand();
+         src[i] = num / RAND_MAX * factor + from;
+    }
+}
 //-------------------------------------------------------------------------------------------------
 void NS_Grid::set_src() {
     set_density_src();
@@ -88,14 +95,14 @@ void NS_Grid::set_velocity_src() {
 }
 
 void NS_Grid::set_random_src() {
-    fill_random(size, u_src, -5, 5);
-    fill_random(size, v_src, -5, 5);
-    fill_random(size, dens_src, -2, 2);
+    fill_random(u_src, I2F(-5), I2F(5));
+    fill_random(v_src, I2F(-5), I2F(5));
+    fill_random(dens_src, I2F(-2), I2F(2));
 }
 
 void NS_Grid::fluctuations() {
-    fill_random(size, u_src, -4, 4);
-//    fill_random(size, v_src, -0.1, 0.1);
+    fill_random(u_src, I2F(-4), I2F(4));
+//    fill_random(v_src, -0.1, 0.1);
 }
 //-------------------------------------------------------------------------------------------------
 void NS_Grid::draw(QPainter & painter) {

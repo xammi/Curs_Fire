@@ -9,6 +9,7 @@
 namespace Core {
 
 #define IX(i, j) ((i) + (N+2) * (j))
+#define I2F(x) ((float) (x))
 
 //-------------------------------------------------------------------------------------------------
 class NS_Grid : public AbstractGrid
@@ -20,9 +21,7 @@ public:
     ~NS_Grid();
 
     void set_src();
-    void fluctuations();
-
-    bool correct_N(int _N) const { return N == _N; }
+    void fluctuations();    
 
     float density(int i, int j) const;
     float min_dens() const;
@@ -31,6 +30,8 @@ public:
     void draw(QPainter &);
 
 private:
+    void fill_random(float * src, float from, float to);
+
     void set_conf();
     void dispose_conf();
 
@@ -43,9 +44,6 @@ private:
     QColor w_yellow(const int) const;
 
 private:
-    int N;
-    int size;
-
     float * u, * u_src;
     float * v, * v_src;
     float * dens, * dens_src;

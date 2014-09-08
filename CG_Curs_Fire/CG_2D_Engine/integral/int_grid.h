@@ -37,15 +37,15 @@ public:
     void set_src();
     void fluctuations();
 
-    bool correct_N(int _N) const { return N == _N; }
-
-    float density(int i, int j) const;
-    float min_dens() const;
-    float max_dens() const;
+    freal density(int i, int j) const;
+    freal min_dens() const;
+    freal max_dens() const;
 
     void draw(QPainter &);
 
 private:
+    void fill_random(freal * src, freal from, freal to);
+
     void set_conf();
     void dispose_conf();
 
@@ -58,12 +58,9 @@ private:
     QColor w_yellow(const int) const;
 
 private:
-    int N;
-    int size;
-
-    float * u, * u_src;
-    float * v, * v_src;
-    float * dens, * dens_src;
+    freal * u, * u_src;
+    freal * v, * v_src;
+    freal * dens, * dens_src;
 };
 //-------------------------------------------------------------------------------------------------
 

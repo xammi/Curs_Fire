@@ -6,7 +6,7 @@
 
 namespace Core {
 
-#define SWAP(x0, x) { float * tmp = x0; x0 = x; x = tmp; }
+#define I_SWAP(x0, x) { freal * tmp = x0; x0 = x; x = tmp; }
 
 //-------------------------------------------------------------------------------------------------
 /*
@@ -18,26 +18,26 @@ public:
     Int_NS_Solver(int _N, float _visc, float _diff, float _dt);
 
     void solver_step(int _N, const Int_NS_Grid &);
-    void solver_step(int _N, float * x, float * x0, float * u, float * v, float * u0, float * v0);
+    void solver_step(int _N, freal * x, freal * x0, freal * u, freal * v, freal * u0, freal * v0);
 
 protected:
     // general solver utils
-    void add_source(float * x, float * s);
-    void set_bnd(int b, float * x);
+    void add_source(freal * x, freal * s);
+    void set_bnd(int b, freal * x);
 
     // density solver
-    void diffuse(int b, float * x, float * x0);
-    void advect(int b, float * d, float * d0, float * u, float * v);
-    void dens_step(float * x, float * x0, float * u, float * v);
+    void diffuse(int b, freal * x, freal * x0);
+    void advect(int b, freal * d, freal * d0, freal * u, freal * v);
+    void dens_step(freal * x, freal * x0, freal * u, freal * v);
 
     // velocity solver
-    void project(float * u, float * v, float * p, float * div);
-    void vel_step(float * u, float * v, float * u0, float * v0);
+    void project(freal * u, freal * v, freal * p, freal * div);
+    void vel_step(freal * u, freal * v, freal * u0, freal * v0);
 
 protected:
-    float visc;
-    float diff;
-    float dt;
+    freal visc;
+    freal diff;
+    freal dt;
 };
 //-------------------------------------------------------------------------------------------------
 } // namespace Core

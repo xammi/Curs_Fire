@@ -106,23 +106,23 @@ void NS_Solver::project(float * u, float * v, float * p, float * div) {
 
 void NS_Solver::dens_step(float * x, float * x0, float * u, float * v) {
     add_source(x, x0);
-    SWAP(x0, x);
+    F_SWAP(x0, x);
     diffuse(0, x, x0);
-    SWAP(x0, x);
+    F_SWAP(x0, x);
     advect(0, x, x0, u, v);
 }
 
 void NS_Solver::vel_step(float * u, float * v, float * u0, float * v0) {
     add_source(u, u0);
     add_source(v, v0);
-    SWAP(u0, u);
+    F_SWAP(u0, u);
     diffuse(1, u, u0);
-    SWAP(v0, v);
+    F_SWAP(v0, v);
     diffuse(2, v, v0);
 
     project(u, v, u0, v0);
-    SWAP(u0, u);
-    SWAP(v0, v);
+    F_SWAP(u0, u);
+    F_SWAP(v0, v);
     advect(1, u, u0, u0, v0);
     advect(2, v, v0, u0, v0);
     project(u, v, u0, v0);

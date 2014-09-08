@@ -5,12 +5,11 @@ namespace Core {
 
 //-------------------------------------------------------------------------------------------------
 Int_NS_Grid::Int_NS_Grid(const int _N) :
-    N(_N)
+    AbstractGrid(_N)
 {
     uint T = time(NULL);
     qsrand(T);
 
-    size = (N+2) * (N+2);
     set_conf();
     set_src();
 }
@@ -30,30 +29,39 @@ void Int_NS_Grid::dispose_conf() {
 }
 
 void Int_NS_Grid::set_conf() {
-    u = new float[size];
-    v = new float[size];
-    dens = new float[size];
+    u = new freal[size];
+    v = new freal[size];
+    dens = new freal[size];
 
-    u_src = new float[size];
-    v_src = new float[size];
-    dens_src = new float[size];
+    u_src = new freal[size];
+    v_src = new freal[size];
+    dens_src = new freal[size];
 
     if (!u || !v || !dens || !u_src || !v_src || !dens_src)
         throw MemNotAlloc();
 }
 
-float Int_NS_Grid::density(int i, int j) const {
+freal Int_NS_Grid::density(int i, int j) const {
     return dens[IX(i, j)];
 }
 
-float Int_NS_Grid::min_dens() const {
+freal Int_NS_Grid::min_dens() const {
     return get_min(size, dens);
 }
 
-float Int_NS_Grid::max_dens() const {
+freal Int_NS_Grid::max_dens() const {
     return get_max(size, dens);
 }
 
+void Int_NS_Grid::fill_random(freal * src, freal from, freal to) {
+    freal factor = to - from;
+    freal MAX_RAND = I2X(RAND_MAX);
+
+    for (int i = 0; i < size; i++) {
+         freal num = I2X(qrand());
+         src[i] = XD(num, XM(MAX_RAND, factor)) + from;
+    }
+}
 //-------------------------------------------------------------------------------------------------
 void Int_NS_Grid::set_src() {
     set_density_src();
@@ -62,9 +70,9 @@ void Int_NS_Grid::set_src() {
 }
 
 void Int_NS_Grid::set_density_src() {
-    float POSIT = 50;
-    float NEGAT_SIDE = 0;
-    float NEGAT_TOP = 0;
+    freal POSIT = I2X(50);
+    freal NEGAT_SIDE = I2X(0);
+    freal NEGAT_TOP = I2X(0);
 
     for (int I = 10; I <= N - 10; I++)
         dens_src[IX(N, I)] = POSIT;
@@ -79,7 +87,7 @@ void Int_NS_Grid::set_density_src() {
 }
 
 void Int_NS_Grid::set_velocity_src() {
-    float UP = -10;
+    freal UP = I2X(-10);
 
     for (int I = 1; I <= N; I++)
         for (int J = 1; J <= N; J++) {
@@ -88,14 +96,14 @@ void Int_NS_Grid::set_velocity_src() {
 }
 
 void Int_NS_Grid::set_random_src() {
-    fill_random(size, u_src, -5, 5);
-    fill_random(size, v_src, -5, 5);
-    fill_random(size, dens_src, -2, 2);
+    fill_random(u_src, I2X(-5), I2X(5));
+    fill_random(v_src, I2X(-5), I2X(5));
+    fill_random(dens_src, I2X(-2), I2X(2));
 }
 
 void Int_NS_Grid::fluctuations() {
-    fill_random(size, u_src, -4, 4);
-//    fill_random(size, v_src, -0.1, 0.1);
+    fill_random(u_src, I2X(-4), I2X(4));
+//    fill_random(v_src, -0.1, 0.1);
 }
 //-------------------------------------------------------------------------------------------------
 void Int_NS_Grid::draw(QPainter & painter) {
@@ -103,9 +111,9 @@ void Int_NS_Grid::draw(QPainter & painter) {
     int i, j, x, y;
 
     QColor color;
-    float min = min_dens();
-    float max = max_dens();
-    float factor = (max - min) / 255;
+    freal min = min_dens();
+    freal max = max_dens();
+    freal factor = XD((max - min), I2X(255));
 
     int degree;
 
@@ -114,7 +122,11 @@ void Int_NS_Grid::draw(QPainter & painter) {
             y = width * i;
             x = height * j;
 
-            degree = qRound( (density(i, j) - min) / factor );
+            if (factor != I2X(0))
+                degree = X2I( XD((density(i, j) - min), factor) );
+            else
+                degree = 0;
+
 //            color = w_black(degree);
             color = w_yellow(degree);
 

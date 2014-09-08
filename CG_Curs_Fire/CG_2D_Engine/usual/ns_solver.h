@@ -6,7 +6,7 @@
 
 namespace Core {
 
-#define SWAP(x0, x) { float * tmp = x0; x0 = x; x = tmp; }
+#define F_SWAP(x0, x) { float * tmp = x0; x0 = x; x = tmp; }
 
 //-------------------------------------------------------------------------------------------------
 // NS = Navier-Stokes
