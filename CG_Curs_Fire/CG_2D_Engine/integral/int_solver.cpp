@@ -38,7 +38,7 @@ void Int_NS_Solver::set_bnd(int b, freal * x) {
 void Int_NS_Solver::diffuse(int b, freal * x, freal * x0) {
     int i, j, k;
     freal a = XM(dt, XM(diff, I2X(N * N)));
-    freal DIVIDER = I2X(1) + XM( I2X(4), a);
+    freal DIVIDER = I2X(1) + XM(I2X(4), a);
 
     for (k = 0; k < ITERS; k++) {
         for (i = 1; i <= N; i++)
@@ -76,7 +76,7 @@ void Int_NS_Solver::advect(int b, freal * d, freal * d0, freal * u, freal * v) {
             t1 = y - I2X(j0);
             t0 = I2X(1) - t1;
 
-            d[IX(i,j)] = XM(s0, (XM(t0, d0[IX(i0,j0)]) + XM(t1, d0[IX(i0, j1)]))) +
+            d[IX(i,j)] = XM(s0, (XM(t0, d0[IX(i0,j0)]) + XM(t1, d0[IX(i0,j1)]))) +
                          XM(s1, (XM(t0, d0[IX(i1,j0)]) + XM(t1, d0[IX(i1,j1)])));
         }
 
@@ -88,12 +88,12 @@ void Int_NS_Solver::project(freal * u, freal * v, freal * p, freal * div) {
     freal HALF = F2X(0.5);
     freal N_X = I2X(N);
 
-    freal h = XD(F2X(1.0), N_X);
+    freal h = XD(I2X(1), N_X);
 
     for (i = 1; i <= N; i++)
         for (j = 1; j <= N; j++) {
             div[IX(i,j)] = XM(-HALF, XM(h, (u[IX(i+1, j)] - u[IX(i-1, j)] + v[IX(i,j+1)] - v[IX(i,j-1)])));
-            p[IX(i,j)] = I2X(0);
+            p[IX(i,j)] = 0;
         }
 
     set_bnd(0, div);

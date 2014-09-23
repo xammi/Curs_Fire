@@ -113,8 +113,11 @@ void Int_NS_Grid::draw(QPainter & painter) {
     QColor color;
     freal min = min_dens();
     freal max = max_dens();
-    freal factor = XD((max - min), I2X(255));
 
+    if (max - min == 0)
+        return;
+
+    freal factor = XD(I2X(255), (max - min));
     int degree;
 
     for (i = 1; i <= N; i++)
@@ -122,11 +125,7 @@ void Int_NS_Grid::draw(QPainter & painter) {
             y = width * i;
             x = height * j;
 
-            if (factor != I2X(0))
-                degree = X2I( XD((density(i, j) - min), factor) );
-            else
-                degree = 0;
-
+            degree = X2I( XM((density(i, j) - min), factor) );
 //            color = w_black(degree);
             color = w_yellow(degree);
 

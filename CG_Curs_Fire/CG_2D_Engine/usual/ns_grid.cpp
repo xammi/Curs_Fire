@@ -112,7 +112,11 @@ void NS_Grid::draw(QPainter & painter) {
     QColor color;
     float min = min_dens();
     float max = max_dens();
-    float factor = (max - min) / 255;
+
+    if (max - min == 0)
+        return;
+
+    float factor = 255 / (max - min);
 
     int degree;
 
@@ -121,7 +125,7 @@ void NS_Grid::draw(QPainter & painter) {
             y = width * i;
             x = height * j;
 
-            degree = qRound( (density(i, j) - min) / factor );
+            degree = qRound( (density(i, j) - min) * factor );
 //            color = w_black(degree);
             color = w_yellow(degree);
 

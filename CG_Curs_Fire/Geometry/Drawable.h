@@ -7,10 +7,8 @@
 //-------------------------------------------------------------------------------------------------
 typedef std::function<QPoint (const Point3D &)> Projector;
 
-class Drawable : QObject
+class Drawable : public QObject
 {
-    Q_OBJECT
-
 public:
     Drawable();
     Drawable(double lX, double rX, double lY, double rY, double lZ, double rZ);
