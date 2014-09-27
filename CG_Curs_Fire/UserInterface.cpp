@@ -9,6 +9,7 @@ UserInterface::UserInterface(QWidget * parent) :
 {
     ui->setupUi(this);
     this->adjustUi();
+    scene->setDefault();
 }
 
 void UserInterface::adjustUi() {
@@ -26,10 +27,29 @@ void UserInterface::paintEvent(QPaintEvent *) {
     painter.fillRect(ui->view->rect(), QBrush(Qt::white));
     painter.setClipRect(ui->view->rect());
 
+    painter.translate(ui->view->width() / 2, ui->view->height() / 2);
+    painter.scale(1, -1);
+
     scene->setScreen(ui->view->size());
+    scene->draw(painter);
 }
 
-void UserInterface::keyPressEvent(QKeyEvent *) {
+void UserInterface::keyPressEvent(QKeyEvent * event) {
+    switch (event->key()) {
+        case Qt::Key_Left: scene->cameraMotion(Camera::LEFT);
+        break;
+        case Qt::Key_Right: scene->cameraMotion(Camera::RIGHT);
+        break;
+        case Qt::Key_Up: scene->cameraMotion(Camera::UP);
+        break;
+        case Qt::Key_Down: scene->cameraMotion(Camera::DOWN);
+        break;
+        case Qt::Key_Equal: scene->cameraMotion(Camera::TOWARD);
+        break;
+        case Qt::Key_Minus: scene->cameraMotion(Camera::BACK);
+        break;
+    }
+    this->update();
 }
 //-------------------------------------------------------------------------------------------------
 void UserInterface::showException(Exception & exc) {

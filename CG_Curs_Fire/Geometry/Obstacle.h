@@ -12,7 +12,7 @@ class Obstacle : public Drawable
 
 public:
     Obstacle();
-    Obstacle(double lX, double rX, double lY, double rY, double lZ, double rZ, Matter matter = Matter::STONE);
+    Obstacle(double lX, double rX, double lY, double rY, double lZ, double rZ, Matter matter);
     virtual ~Obstacle() {}
 
     virtual void draw(QPainter &, const Projector &);
