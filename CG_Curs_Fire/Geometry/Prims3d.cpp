@@ -7,6 +7,19 @@ Point3D::Point3D() :
 Point3D::Point3D(double _X, double _Y, double _Z) :
     X(_X), Y(_Y), Z(_Z)
 {}
+
+double dist(const QPoint & P1, const QPoint & P2) {
+    int dX = P1.x() - P2.x(),
+        dY = P1.y() - P2.y();
+    return qSqrt(dX*dX + dY*dY);
+}
+
+double dist(const Point3D & P1, const Point3D & P2) {
+    double dX = P1.X - P2.X,
+           dY = P1.Y - P2.Y,
+           dZ = P1.Z - P2.Z;
+    return qSqrt(dX*dX + dY*dY + dZ*dZ);
+}
 //-------------------------------------------------------------------------------------------------
 Vector3D::Vector3D() :
     X(0), Y(0), Z(0)
@@ -17,7 +30,7 @@ Vector3D::Vector3D(double _X, double _Y, double _Z) :
 {}
 
 double Vector3D::abs() const {
-    return X * X + Y * Y + Z * Z;
+    return qSqrt(X * X + Y * Y + Z * Z);
 }
 
 Vector3D Vector3D::single() const {
@@ -83,6 +96,16 @@ Point3D Plane3D::project(const Point3D & point) const {
            Z = point.Z + C*t;
 
     return Point3D(X, Y, Z);
+}
+
+double Plane3D::dist(const Point3D & point) const {
+    // решим через параметрическое уравнение прямой, перпендикулярной к данной плоскости
+    // и проходящей через точку
+    double div = A * point.X + B * point.Y + C * point.Z + D;
+    // найдем пересечение прямой с плоскостью
+    double t = -div / (A*A + B*B + C*C);
+    // найдем расстояние от точки до плоскости
+    return Vector3D(A*t, B*t, C*t).abs();
 }
 //-------------------------------------------------------------------------------------------------
 Point3D rotate_XZ(const Point3D & point, const Point3D & center, float angle) {

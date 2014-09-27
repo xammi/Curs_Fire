@@ -10,6 +10,7 @@ UserInterface::UserInterface(QWidget * parent) :
     ui->setupUi(this);
     this->adjustUi();
     scene->setDefault();
+    animeTimer = startTimer(45);
 }
 
 void UserInterface::adjustUi() {
@@ -21,6 +22,13 @@ UserInterface::~UserInterface() {
     delete ui;
 }
 //-------------------------------------------------------------------------------------------------
+void UserInterface::timerEvent(QTimerEvent * event) {
+    if (event->timerId() == animeTimer) {
+        scene->updateAnime();
+        this->update();
+    }
+}
+
 void UserInterface::paintEvent(QPaintEvent *) {
     QPainter painter(this);
     painter.translate(ui->view->pos());

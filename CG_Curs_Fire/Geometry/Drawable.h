@@ -13,7 +13,8 @@ public:
     Drawable(double lX, double rX, double lY, double rY, double lZ, double rZ);
     virtual ~Drawable() {}
 
-    virtual void draw(QPainter &, const Projector &) = 0;
+    virtual void draw(QPainter &, const Projector &, const Plane3D &) = 0;
+    virtual void updateByTimer() = 0;
 
     Point3D center() const;
     bool isOwner(const Point3D &) const;

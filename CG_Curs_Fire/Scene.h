@@ -1,6 +1,7 @@
 #ifndef SCENE_H
 #define SCENE_H
 
+#include "Geometry/Drawable.h"
 #include "Geometry/Obstacle.h"
 
 //-------------------------------------------------------------------------------------------------
@@ -11,6 +12,7 @@ class Scene : public QObject
     Q_OBJECT
 
     typedef QVector<Drawable *> Draws;
+    typedef std::pair<Drawable *, double> DrawDist;
 
 signals:
     void throwException(Exception &);
@@ -22,10 +24,13 @@ public:
 
     void setScreen(const QSize &);
     void setDefault();
-    void draw(QPainter &) const;
+    void draw(QPainter &);
     void cameraMotion(const Camera);
+    void updateAnime();
 
 private:
+    void sortDraws(const Plane3D &);
+
     void cameraLeftRight(float angle);
     void cameraUpDown(float angle);
     void cameraTowardBack(float move);

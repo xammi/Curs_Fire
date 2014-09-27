@@ -5,6 +5,7 @@
 
 #include <QMainWindow>
 #include <QKeyEvent>
+#include <QTimerEvent>
 
 namespace Ui {
     class UserInterface;
@@ -14,6 +15,8 @@ namespace Ui {
 class UserInterface : public QMainWindow
 {
     Q_OBJECT
+
+    typedef int Timer;
 
 private slots:
     void showException(Exception &);
@@ -25,12 +28,14 @@ public:
 
     void paintEvent(QPaintEvent *);
     void keyPressEvent(QKeyEvent *);
+    void timerEvent(QTimerEvent *);
 
 private:
     void adjustUi();
 
     Ui::UserInterface * ui;
     Scene * scene;
+    Timer animeTimer;
 };
 //-------------------------------------------------------------------------------------------------
 

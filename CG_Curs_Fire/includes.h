@@ -7,6 +7,7 @@
 #include <QVector>
 #include <QList>
 #include <QString>
+#include <qmath.h>
 
 #include <QPainter>
 #include <QPoint>
@@ -20,6 +21,8 @@ using std::function;
 struct Exception {
     virtual QString toString() { return ""; }
 };
+
+typedef QVector<int> Ints;
 
 Q_DECLARE_METATYPE(Exception)
 //-------------------------------------------------------------------------------------------------

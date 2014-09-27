@@ -26,6 +26,12 @@ public:
     double X, Y, Z;
 };
 
+typedef QVector<QPoint> QPoints;
+typedef QVector<Point3D> Points3D;
+
+double dist(const QPoint &, const QPoint &);
+double dist(const Point3D &, const Point3D &);
+
 Point3D operator +(const Point3D &, const Vector3D &);
 Point3D operator -(const Point3D &, const Vector3D &);
 
@@ -45,6 +51,7 @@ public:
     Plane3D(const Point3D &, const Vector3D &);
 
     Point3D project(const Point3D &) const;
+    double dist(const Point3D &) const;
 
 public:
     double A, B, C, D;

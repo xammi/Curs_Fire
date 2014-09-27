@@ -30,7 +30,7 @@ void Scene::setDefault() {
     draws.append(new Obstacle(-400, -200, -400, -200, -400, -300, Matter::STONE));
 }
 
-void Scene::draw(QPainter & painter) const {
+void Scene::draw(QPainter & painter) {
     Plane3D plane = Plane3D(cameraPos, cameraPos - center);
     Vector3D singleX = (cameraX - cameraPos) * scale,
              singleY = (cameraY - cameraPos) * scale;
@@ -41,8 +41,9 @@ void Scene::draw(QPainter & painter) const {
         return QPoint(destructBy(V, singleX), destructBy(V, singleY));
     };
 
+    sortDraws(plane);
     for (Drawable * drawable : draws)
-        drawable->draw(painter, projector);
+        drawable->draw(painter, projector, plane);
 }
 
 void Scene::cameraMotion(const Camera camera) {
@@ -76,4 +77,25 @@ void Scene::cameraUpDown(float angle) {
 
 void Scene::cameraTowardBack(float zoom) {
     scale *= zoom;
+}
+//-------------------------------------------------------------------------------------------------
+void Scene::sortDraws(const Plane3D & plane) {
+
+    QList<DrawDist> dists;
+    for (Drawable * draw : draws) {
+        double dist = plane.dist(draw->center());
+        dists.append(DrawDist(draw, dist));
+    }
+
+    qSort(dists.begin(), dists.end(),
+          [] (DrawDist & A, DrawDist & B) { return A.second < B.second; }
+    );
+
+    for (int I = 0; I < dists.size(); ++I)
+        draws[I] = dists[I].first;
+}
+
+void Scene::updateAnime() {
+    for (Drawable * drawable : draws)
+        drawable->updateByTimer();
 }
