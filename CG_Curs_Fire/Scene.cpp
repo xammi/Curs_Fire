@@ -1,5 +1,9 @@
 #include "Scene.h"
 
+#include "Geometry/Obstacle.h"
+#include "Animetry/Flame.h"
+#include "Animetry/Smoke.h"
+
 const float SINGLE_CAM_ANGLE = 0.05;
 const float CAM_ZOOM = 1.01;
 //-------------------------------------------------------------------------------------------------
@@ -28,6 +32,7 @@ void Scene::setScreen(const QSize & screen) {
 void Scene::setDefault() {
     draws.append(new Obstacle(-100, 100, -100, 100, -100, 100, Matter::WOOD));
     draws.append(new Obstacle(-400, -200, -400, -200, -400, -300, Matter::STONE));
+    draws.append(new Flame(-200, -100, -200, -100, -200, -100));
 }
 
 void Scene::draw(QPainter & painter) {

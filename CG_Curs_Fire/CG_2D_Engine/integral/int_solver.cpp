@@ -22,28 +22,33 @@ void Int_NS_Solver::add_source(freal * x, freal * s) {
 void Int_NS_Solver::set_bnd(int b, freal * x) {
     int i;
     freal HALF = F2X(0.5);
+    int N_1 = N+1;
 
     for (i = 1; i <= N; i++) {
         x[IX(0,i)] = (b==1)? -x[IX(1,i)] : x[IX(1,i)];
-        x[IX(N+1,i)] = (b==1)? -x[IX(N,i)] : x[IX(N,i)];
+        x[IX(N_1,i)] = (b==1)? -x[IX(N,i)] : x[IX(N,i)];
         x[IX(i,0)] = (b==2)? -x[IX(i,1)] : x[IX(i,1)];
-        x[IX(i,N+1)] = (b==2)? -x[IX(i,N)] : x[IX(i,1)];
+        x[IX(i,N_1)] = (b==2)? -x[IX(i,N)] : x[IX(i,1)];
     }
     x[IX(0,0)] = XM(HALF, (x[IX(1,0)] + x[IX(0,1)]));
-    x[IX(0,N+1)] = XM(HALF, (x[IX(1,N+1)] + x[IX(0,N)]));
-    x[IX(N+1,0)] = XM(HALF, (x[IX(N,0)] + x[IX(N+1,1)]));
-    x[IX(N+1,N+1)] = XM(HALF, (x[IX(N,N+1)] + x[IX(N+1,N)]));
+    x[IX(0,N_1)] = XM(HALF, (x[IX(1,N_1)] + x[IX(0,N)]));
+    x[IX(N_1,0)] = XM(HALF, (x[IX(N,0)] + x[IX(N_1,1)]));
+    x[IX(N_1,N_1)] = XM(HALF, (x[IX(N,N_1)] + x[IX(N_1,N)]));
 }
 
 void Int_NS_Solver::diffuse(int b, freal * x, freal * x0) {
     int i, j, k;
     freal a = XM(dt, XM(diff, I2X(N * N)));
     freal DIVIDER = I2X(1) + XM(I2X(4), a);
+    freal factor;
 
     for (k = 0; k < ITERS; k++) {
         for (i = 1; i <= N; i++)
-            for (j = 1; j <= N; j++)
-                x[IX(i,j)] = XD((x0[IX(i,j)] + XM(a, ( x[IX(i-1,j)] + x[IX(i+1,j)] + x[IX(i,j-1)] + x[IX(i,j+1)] ))), DIVIDER);
+            for (j = 1; j <= N; j++) {
+                factor = XM(a, (x[IX(i-1,j)] + x[IX(i+1,j)] + x[IX(i,j-1)] + x[IX(i,j+1)]));
+                x[IX(i,j)] = XD((x0[IX(i,j)] + factor), DIVIDER);
+
+            }
         set_bnd(b, x);
     }
 }
@@ -55,6 +60,8 @@ void Int_NS_Solver::advect(int b, freal * d, freal * d0, freal * u, freal * v) {
     freal N_X = I2X(N);
     dt0 = XM(dt, N_X);
     freal HALF = F2X(0.5);
+    freal N_HALF = N_X + HALF;
+    freal sum1, sum2;
 
     for (i = 1; i <= N; i++)
         for (j = 1; j <= N; j++) {
@@ -62,12 +69,12 @@ void Int_NS_Solver::advect(int b, freal * d, freal * d0, freal * u, freal * v) {
             y = I2X(j) - XM(dt0, v[IX(i,j)]);
 
             if (x < HALF) x = HALF;
-            if (x > N_X + HALF) x = N_X + HALF;
+            if (x > N_HALF) x = N_HALF;
             i0 = X2I(x);
             i1 = i0 + 1;
 
             if (y < HALF) y = HALF;
-            if (y > N_X + HALF) y = N_X + HALF;
+            if (y > N_HALF) y = N_HALF;
             j0 = X2I(y);
             j1 = j0 + 1;
 
@@ -76,8 +83,9 @@ void Int_NS_Solver::advect(int b, freal * d, freal * d0, freal * u, freal * v) {
             t1 = y - I2X(j0);
             t0 = I2X(1) - t1;
 
-            d[IX(i,j)] = XM(s0, (XM(t0, d0[IX(i0,j0)]) + XM(t1, d0[IX(i0,j1)]))) +
-                         XM(s1, (XM(t0, d0[IX(i1,j0)]) + XM(t1, d0[IX(i1,j1)])));
+            sum1 = (XM(t0, d0[IX(i0,j0)]) + XM(t1, d0[IX(i0,j1)]));
+            sum2 = (XM(t0, d0[IX(i1,j0)]) + XM(t1, d0[IX(i1,j1)]));
+            d[IX(i,j)] = XM(s0, sum1) + XM(s1, sum2);
         }
 
     set_bnd(b, d);
@@ -88,29 +96,33 @@ void Int_NS_Solver::project(freal * u, freal * v, freal * p, freal * div) {
     freal HALF = F2X(0.5);
     freal N_X = I2X(N);
 
-    freal h = XD(I2X(1), N_X);
+    freal h = XD(F2X(1.0), N_X);
+    freal h_HALF = XM(-HALF, h);
 
     for (i = 1; i <= N; i++)
         for (j = 1; j <= N; j++) {
-            div[IX(i,j)] = XM(-HALF, XM(h, (u[IX(i+1, j)] - u[IX(i-1, j)] + v[IX(i,j+1)] - v[IX(i,j-1)])));
-            p[IX(i,j)] = 0;
+            div[IX(i,j)] = XM(h_HALF, (u[IX(i+1, j)] - u[IX(i-1, j)] + v[IX(i,j+1)] - v[IX(i,j-1)]));
+            p[IX(i,j)] = I2X(0);
         }
 
     set_bnd(0, div);
     set_bnd(0, p);
 
+    freal FOUR = I2X(4);
+
     for (k = 0; k < ITERS; k++) {
         for (i = 1; i <= N; i++)
             for (j = 1; j <= N; j++) {
-                p[IX(i,j)] = XD((div[IX(i,j)] + p[IX(i-1,j)] + p[IX(i+1,j)] + p[IX(i,j-1)] + p[IX(i,j+1)]), I2X(4));
+                p[IX(i,j)] = XD((div[IX(i,j)] + p[IX(i-1,j)] + p[IX(i+1,j)] + p[IX(i,j-1)] + p[IX(i,j+1)]), FOUR);
             }
         set_bnd(0, p);
     }
 
+    h_HALF = XD(HALF, h);
     for (i = 1; i <= N; i++)
         for (j = 1; j <= N; j++) {
-            u[IX(i,j)] -= XM(HALF, XD((p[IX(i+1,j)] - p[IX(i-1,j)]), h));
-            v[IX(i,j)] -= XM(HALF, XD((p[IX(i,j+1)] - p[IX(i,j-1)]), h));
+            u[IX(i,j)] -= XM(h_HALF, (p[IX(i+1,j)] - p[IX(i-1,j)]));
+            v[IX(i,j)] -= XM(h_HALF, (p[IX(i,j+1)] - p[IX(i,j-1)]));
         }
 
     set_bnd(1, u);

@@ -1,6 +1,7 @@
 #include "Obstacle.h"
 
 //-------------------------------------------------------------------------------------------------
+
 Obstacle::Obstacle() :
     Drawable(), matter(Matter::STONE)
 {}

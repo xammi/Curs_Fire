@@ -2,7 +2,6 @@
 #define SCENE_H
 
 #include "Geometry/Drawable.h"
-#include "Geometry/Obstacle.h"
 
 //-------------------------------------------------------------------------------------------------
 enum class Camera { LEFT = 0, RIGHT, UP, DOWN, TOWARD, BACK };

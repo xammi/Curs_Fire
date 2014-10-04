@@ -103,7 +103,7 @@ void Int_NS_Grid::set_random_src() {
 
 void Int_NS_Grid::fluctuations() {
     fill_random(u_src, I2X(-4), I2X(4));
-//    fill_random(v_src, -0.1, 0.1);
+    // fill_random(v_src, F2X(-0.1), F2X(0.1));
 }
 //-------------------------------------------------------------------------------------------------
 void Int_NS_Grid::draw(QPainter & painter) {

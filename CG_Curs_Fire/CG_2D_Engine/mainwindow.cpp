@@ -11,6 +11,8 @@ Time get_Time() {
     return gettime_now;
 }
 
+// email: z.n.rusakova@mail.ru
+
 double get_End_Time(Time start_time) {
     Time end_time = get_Time();
     double sec = double(end_time.tv_sec - start_time.tv_sec) * 1000;
@@ -23,7 +25,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     N = 60;
-    solver = new Int_NS_Solver(N, 0.01, 0.0002, 0.1);
+    // solver = new Int_NS_Solver(N, 0.01, 0.0002, 0.1);
+    solver = new Int_NS_Solver(N, 0.01, 0.0002, 0.01);
     grid = new Int_NS_Grid(N);
 
     ui->setupUi(this);

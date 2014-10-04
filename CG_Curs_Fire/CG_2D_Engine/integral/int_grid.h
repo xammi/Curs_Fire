@@ -8,22 +8,22 @@
 
 namespace Core {
 
-#define IX(i, j) ((i) + (N+2) * (j))
+#define IX(i, j) ((i)+(N+2)*(j))
 
 // Special macroses
 typedef long freal;
 #define FPP 9
-#define X1_0 (1 << FPP)
+#define X1_0 (1<<FPP)
 
 // conversions for freal
-#define I2X(x) ( (freal) ((x) << FPP) )
-#define F2X(x) ( (freal) ((x) * X1_0) )
-#define X2I(x) ( (int) ((x) >> FPP) )
-#define X2F(x) ( (float) (x) / X1_0 )
+#define I2X(x) ((freal)((x)<<FPP))
+#define F2X(x) ((freal)((x)*X1_0))
+#define X2I(x) ((int)((x)>>FPP))
+#define X2F(x) ((float)(x)/X1_0)
 
 // replacements for the multiplication and division
-#define XM(x, y) ( (freal) (((x) * (y)) >> FPP) )
-#define XD(x, y) ( (freal) ( (((x)) << FPP) / (y) ) )
+#define XM(x, y) ((freal)(((x)*(y))>>FPP))
+#define XD(x, y) ((freal)(((x)<<FPP)/(y)))
 
 //-------------------------------------------------------------------------------------------------
 class Int_NS_Grid : public AbstractGrid

@@ -28,7 +28,7 @@ public:
     virtual void updateByTimer();
     void setMatter(Matter);
 
-private:
+protected:
     int findInvisible(const Points3D &, const Plane3D &);
 
 protected:

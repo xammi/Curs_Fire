@@ -1,10 +1,9 @@
 #ifndef NS_GRID_H
 #define NS_GRID_H
 
-#include "../agrid.h"
+#include "AbstractGrid.h"
 
 #include <QColor>
-#include <QPainter>
 
 namespace Core {
 
@@ -27,8 +26,6 @@ public:
     float min_dens() const;
     float max_dens() const;
 
-    void draw(QPainter &);
-
 private:
     void fill_random(float * src, float from, float to);
 
@@ -38,10 +35,6 @@ private:
     void set_density_src();
     void set_velocity_src();
     void set_random_src();
-
-    // params: degree
-    QColor w_black(const int) const;
-    QColor w_yellow(const int) const;
 
 private:
     float * u, * u_src;

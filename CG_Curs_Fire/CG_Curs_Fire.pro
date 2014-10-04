@@ -17,13 +17,25 @@ SOURCES += main.cpp\
     Scene.cpp \
     Geometry/Drawable.cpp \
     Geometry/Obstacle.cpp \
-    Geometry/Prims3d.cpp
+    Geometry/Prims3d.cpp \
+    Animetry/AbstractGrid.cpp \
+    Animetry/AbstractSolver.cpp \
+    Animetry/NS_Grid.cpp \
+    Animetry/NS_Solver.cpp \
+    Animetry/Flame.cpp \
+    Animetry/Smoke.cpp
 
 HEADERS  += UserInterface.h \
     includes.h \
     Scene.h \
     Geometry/Drawable.h \
     Geometry/Obstacle.h \
-    Geometry/Prims3d.h
+    Geometry/Prims3d.h \
+    Animetry/AbstractGrid.h \
+    Animetry/AbstractSolver.h \
+    Animetry/NS_Grid.h \
+    Animetry/NS_Solver.h \
+    Animetry/Flame.h \
+    Animetry/Smoke.h
 
 FORMS    += UserInterface.ui
