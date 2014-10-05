@@ -17,26 +17,23 @@ class NS_Grid : public AbstractGrid
 
 public:
     NS_Grid(const int);
-    ~NS_Grid();
+    virtual ~NS_Grid();
 
-    void set_src();
-    void fluctuations();    
+    virtual void set_density_src() = 0;
+    virtual void set_velocity_src() = 0;
+    virtual void fluctuations() = 0;
 
     float density(int i, int j) const;
     float min_dens() const;
     float max_dens() const;
 
-private:
+protected:
     void fill_random(float * src, float from, float to);
 
     void set_conf();
     void dispose_conf();
 
-    void set_density_src();
-    void set_velocity_src();
-    void set_random_src();
-
-private:
+protected:
     float * u, * u_src;
     float * v, * v_src;
     float * dens, * dens_src;

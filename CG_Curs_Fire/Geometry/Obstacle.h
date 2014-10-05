@@ -25,7 +25,6 @@ public:
     virtual ~Obstacle() {}
 
     virtual void draw(QPainter &, const Projector &, const Plane3D &);
-    virtual void updateByTimer();
     void setMatter(Matter);
 
 protected:

@@ -2,7 +2,7 @@
 
 namespace Core {
 
-const int ITERS = 20;
+const int ITERS = 10;
 
 NS_Solver::NS_Solver(int _N, float _visc, float _diff, float _dt) :
     AbstractSolver(_N), visc(_visc), diff(_diff), dt(_dt)
@@ -16,27 +16,29 @@ void NS_Solver::add_source(float * x, float * s) {
 
 void NS_Solver::set_bnd(int b, float * x) {
     int i;
+    int N_1 = N + 1;
 
     for (i = 1; i <= N; i++) {
         x[IX(0,i)] = (b==1)? -x[IX(1,i)] : x[IX(1,i)];
-        x[IX(N+1,i)] = (b==1)? -x[IX(N,i)] : x[IX(N,i)];
+        x[IX(N_1,i)] = (b==1)? -x[IX(N,i)] : x[IX(N,i)];
         x[IX(i,0)] = (b==2)? -x[IX(i,1)] : x[IX(i,1)];
-        x[IX(i,N+1)] = (b==2)? -x[IX(i,N)] : x[IX(i,1)];
+        x[IX(i,N_1)] = (b==2)? -x[IX(i,N)] : x[IX(i,1)];
     }
     x[IX(0,0)] = 0.5 * (x[IX(1,0)] + x[IX(0,1)]);
-    x[IX(0,N+1)] = 0.5 * (x[IX(1,N+1)] + x[IX(0,N)]);
-    x[IX(N+1,0)] = 0.5 * (x[IX(N,0)] + x[IX(N+1,1)]);
-    x[IX(N+1,N+1)] = 0.5 * (x[IX(N,N+1)] + x[IX(N+1,N)]);
+    x[IX(0,N_1)] = 0.5 * (x[IX(1,N_1)] + x[IX(0,N)]);
+    x[IX(N_1,0)] = 0.5 * (x[IX(N,0)] + x[IX(N_1,1)]);
+    x[IX(N_1,N_1)] = 0.5 * (x[IX(N,N_1)] + x[IX(N_1,N)]);
 }
 
 void NS_Solver::diffuse(int b, float * x, float * x0) {
     int i, j, k;
     float a = dt * diff * N * N;
+    float DIVIDER = 1 + 4*a;
 
     for (k = 0; k < ITERS; k++) {
         for (i = 1; i <= N; i++)
             for (j = 1; j <= N; j++)
-                x[IX(i,j)] = (x0[IX(i,j)] + a*( x[IX(i-1,j)] + x[IX(i+1,j)] + x[IX(i,j-1)] + x[IX(i,j+1)] )) / (1 + 4*a);
+                x[IX(i,j)] = (x0[IX(i,j)] + a*( x[IX(i-1,j)] + x[IX(i+1,j)] + x[IX(i,j-1)] + x[IX(i,j+1)] )) / DIVIDER;
         set_bnd(b, x);
     }
 }

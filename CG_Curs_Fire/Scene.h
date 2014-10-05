@@ -26,6 +26,7 @@ public:
     void draw(QPainter &);
     void cameraMotion(const Camera);
     void updateAnime();
+    void specialKey();
 
 private:
     void sortDraws(const Plane3D &);

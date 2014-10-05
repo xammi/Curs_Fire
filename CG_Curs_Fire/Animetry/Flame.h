@@ -9,8 +9,22 @@ using Core::NS_Grid;
 using Core::NS_Solver;
 
 //-------------------------------------------------------------------------------------------------
+class FlameGrid : public NS_Grid
+{
+    friend class NS_Solver;
 
-class Flame : public Drawable
+public:
+    FlameGrid(const int _N) : NS_Grid(_N) {}
+    ~FlameGrid() {}
+
+    void set_density_src();
+    void set_velocity_src();
+    void fluctuations();
+};
+
+//-------------------------------------------------------------------------------------------------
+
+class Flame : public Drawable, public QRunnable
 {
 public:
     Flame();
@@ -19,6 +33,9 @@ public:
 
     void draw(QPainter &, const Projector &, const Plane3D &);
     void updateByTimer();
+    void specialAction();
+
+    void run();
 
 protected:
     void initialize();

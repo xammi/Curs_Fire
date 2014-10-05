@@ -30,9 +30,10 @@ void Scene::setScreen(const QSize & screen) {
 }
 
 void Scene::setDefault() {
-    draws.append(new Obstacle(-100, 100, -100, 100, -100, 100, Matter::WOOD));
-    draws.append(new Obstacle(-400, -200, -400, -200, -400, -300, Matter::STONE));
-    draws.append(new Flame(-200, -100, -200, -100, -200, -100));
+    Flame * centralFlame = new Flame(-100, 100, -100, 100, -100, 100);
+
+    draws.append(centralFlame);
+    draws.append(new Smoke(-100, 100, 90, 290, -100, 100, centralFlame));
 }
 
 void Scene::draw(QPainter & painter) {
@@ -103,4 +104,9 @@ void Scene::sortDraws(const Plane3D & plane) {
 void Scene::updateAnime() {
     for (Drawable * drawable : draws)
         drawable->updateByTimer();
+}
+
+void Scene::specialKey() {
+    for (Drawable * drawable : draws)
+        drawable->specialAction();
 }

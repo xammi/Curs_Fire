@@ -14,7 +14,8 @@ public:
     virtual ~Drawable() {}
 
     virtual void draw(QPainter &, const Projector &, const Plane3D &) = 0;
-    virtual void updateByTimer() = 0;
+    virtual void updateByTimer() {}
+    virtual void specialAction() {}
 
     Point3D center() const;
     bool isOwner(const Point3D &) const;

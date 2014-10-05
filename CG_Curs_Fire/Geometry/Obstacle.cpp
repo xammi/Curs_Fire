@@ -51,8 +51,3 @@ int Obstacle::findInvisible(const Points3D & Ps3, const Plane3D & plane) {
 
     return invisible;
 }
-
-void Obstacle::updateByTimer()
-{
-    // ничего не делать
-}

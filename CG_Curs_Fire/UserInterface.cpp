@@ -10,7 +10,7 @@ UserInterface::UserInterface(QWidget * parent) :
     ui->setupUi(this);
     this->adjustUi();
     scene->setDefault();
-    animeTimer = startTimer(45);
+    animeTimer = startTimer(60);
 }
 
 void UserInterface::adjustUi() {
@@ -55,6 +55,8 @@ void UserInterface::keyPressEvent(QKeyEvent * event) {
         case Qt::Key_Equal: scene->cameraMotion(Camera::TOWARD);
         break;
         case Qt::Key_Minus: scene->cameraMotion(Camera::BACK);
+        break;
+        case Qt::Key_Space: scene->specialKey();
         break;
     }
     this->update();

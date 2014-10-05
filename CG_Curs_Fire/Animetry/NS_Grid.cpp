@@ -11,7 +11,6 @@ NS_Grid::NS_Grid(const int _N) :
     qsrand(T);
 
     set_conf();
-    set_src();
 }
 
 NS_Grid::~NS_Grid() {
@@ -39,6 +38,13 @@ void NS_Grid::set_conf() {
 
     if (!u || !v || !dens || !u_src || !v_src || !dens_src)
         throw MemNotAlloc();
+
+    to_zero(size, u);
+    to_zero(size, v);
+    to_zero(size, dens);
+    to_zero(size, u_src);
+    to_zero(size, v_src);
+    to_zero(size, dens_src);
 }
 
 float NS_Grid::density(int i, int j) const {
@@ -62,50 +68,7 @@ void NS_Grid::fill_random(float * src, float from, float to) {
     }
 }
 //-------------------------------------------------------------------------------------------------
-void NS_Grid::set_src() {
-    set_density_src();
-    set_velocity_src();
-//    set_random_src();
-}
-
-void NS_Grid::set_density_src() {
-    float POSIT = 50;
-    float NEGAT_SIDE = 0;
-    float NEGAT_TOP = 0;
-
-    for (int I = 10; I <= N - 10; I++)
-        dens_src[IX(N, I)] = POSIT;
-
-    for (int I = 1; I < N - 1; I++) {
-        dens_src[IX(I, 1)] = NEGAT_SIDE;
-        dens_src[IX(I, N)] = NEGAT_SIDE;
-    }
-
-    for (int I = 10; I <= N-10; I++)
-        dens_src[IX(30, I)] = NEGAT_TOP;
-}
-
-void NS_Grid::set_velocity_src() {
-    float UP = -10;
-
-    for (int I = 1; I <= N; I++)
-        for (int J = 1; J <= N; J++) {
-            u_src[IX(I,J)] = UP;
-        }
-}
-
-void NS_Grid::set_random_src() {
-    fill_random(u_src, I2F(-5), I2F(5));
-    fill_random(v_src, I2F(-5), I2F(5));
-    fill_random(dens_src, I2F(-2), I2F(2));
-}
-
-void NS_Grid::fluctuations() {
-    fill_random(u_src, I2F(-4), I2F(4));
-//    fill_random(v_src, -0.1, 0.1);
-}
 //-------------------------------------------------------------------------------------------------
-
 //-------------------------------------------------------------------------------------------------
 
 } // namespace Core

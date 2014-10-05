@@ -17,6 +17,8 @@
 using std::function;
 
 #include <QMetaType>
+#include <QThread>
+#include <QThreadPool>
 //-------------------------------------------------------------------------------------------------
 struct Exception {
     virtual QString toString() { return ""; }
