@@ -15,6 +15,7 @@
 
 #include <functional>
 using std::function;
+using std::swap;
 
 #include <QMetaType>
 #include <QThread>

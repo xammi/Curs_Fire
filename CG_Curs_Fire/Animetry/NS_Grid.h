@@ -7,9 +7,6 @@
 
 namespace Core {
 
-#define IX(i, j) ((i)+(N+2)*(j))
-#define I2F(x) ((float)(x))
-
 //-------------------------------------------------------------------------------------------------
 class NS_Grid : public AbstractGrid
 {
@@ -23,20 +20,26 @@ public:
     virtual void set_velocity_src() = 0;
     virtual void fluctuations() = 0;
 
-    float density(int i, int j) const;
-    float min_dens() const;
-    float max_dens() const;
+    FVal density(int i, int j) const;
+    FVal min_dens() const;
+    FVal max_dens() const;
 
 protected:
-    void fill_random(float * src, float from, float to);
+    void fill_random(Field src, FVal from, FVal to);
 
-    void set_conf();
-    void dispose_conf();
+    void set_fields();
+    void dispose_fields();
+
+    Field alloc() const;
+    void dealloc(Field);
 
 protected:
-    float * u, * u_src;
-    float * v, * v_src;
-    float * dens, * dens_src;
+    Field u;
+    Field u_src;
+    Field v;
+    Field v_src;
+    Field dens;
+    Field dens_src;
 };
 //-------------------------------------------------------------------------------------------------
 

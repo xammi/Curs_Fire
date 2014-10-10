@@ -2,111 +2,111 @@
 
 namespace Core {
 
-const int ITERS = 10;
+const int ITERS = 20;
 
-NS_Solver::NS_Solver(int _N, float _visc, float _diff, float _dt) :
+NS_Solver::NS_Solver(int _N, Factor _visc, Factor _diff, Factor _dt) :
     AbstractSolver(_N), visc(_visc), diff(_diff), dt(_dt)
 {}
 //-------------------------------------------------------------------------------------------------
-void NS_Solver::add_source(float * x, float * s) {
-    int i = 0;
-    for (; i < size; i++)
-        x[i] += dt * s[i];
+void NS_Solver::add_source(Field field, Field source) {
+    int I, J, N_1 = N + 1;
+    for (I = 1; I <= N; I++)
+        for (J = 1; J <= N; J++)
+            field[I][J] += dt * source[I][J];
 }
 
-void NS_Solver::set_bnd(int b, float * x) {
-    int i;
+void NS_Solver::set_bnd(int B, Field x) {
     int N_1 = N + 1;
 
-    for (i = 1; i <= N; i++) {
-        x[IX(0,i)] = (b==1)? -x[IX(1,i)] : x[IX(1,i)];
-        x[IX(N_1,i)] = (b==1)? -x[IX(N,i)] : x[IX(N,i)];
-        x[IX(i,0)] = (b==2)? -x[IX(i,1)] : x[IX(i,1)];
-        x[IX(i,N_1)] = (b==2)? -x[IX(i,N)] : x[IX(i,1)];
+    for (int I = 1; I <= N; I++) {
+        x[0][I] = (B==1)? -x[1][I] : x[1][I];
+        x[N_1][I] = (B==1)? -x[N][I] : x[N][I];
+        x[I][0] = (B==2)? -x[I][1] : x[I][1];
+        x[I][N_1] = (B==2)? -x[I][N] : x[I][1];
     }
-    x[IX(0,0)] = 0.5 * (x[IX(1,0)] + x[IX(0,1)]);
-    x[IX(0,N_1)] = 0.5 * (x[IX(1,N_1)] + x[IX(0,N)]);
-    x[IX(N_1,0)] = 0.5 * (x[IX(N,0)] + x[IX(N_1,1)]);
-    x[IX(N_1,N_1)] = 0.5 * (x[IX(N,N_1)] + x[IX(N_1,N)]);
+    x[0][0] = 0.5 * (x[1][0] + x[0][1]);
+    x[0][N_1] = 0.5 * (x[1][N_1] + x[0][N]);
+    x[N_1][0] = 0.5 * (x[N][0] + x[N_1][1]);
+    x[N_1][N_1] = 0.5 * (x[N][N_1] + x[N_1][N]);
 }
 
-void NS_Solver::diffuse(int b, float * x, float * x0) {
-    int i, j, k;
-    float a = dt * diff * N * N;
-    float DIVIDER = 1 + 4*a;
+void NS_Solver::diffuse(int B, Field x, Field x0) {
+    int I, J, K;
+    Factor A = dt * diff * N * N;
+    Factor DIVIDER = 1 + 4*A;
 
-    for (k = 0; k < ITERS; k++) {
-        for (i = 1; i <= N; i++)
-            for (j = 1; j <= N; j++)
-                x[IX(i,j)] = (x0[IX(i,j)] + a*( x[IX(i-1,j)] + x[IX(i+1,j)] + x[IX(i,j-1)] + x[IX(i,j+1)] )) / DIVIDER;
-        set_bnd(b, x);
+    for (K = 0; K < ITERS; K++) {
+        for (I = 1; I <= N; I++)
+            for (J = 1; J <= N; J++)
+                x[I][J] = (x0[I][J] + A*( x[I-1][J] + x[I+1][J] + x[I][J-1] + x[I][J+1] )) / DIVIDER;
+        set_bnd(B, x);
     }
 }
 
-void NS_Solver::advect(int b, float * d, float * d0, float * u, float * v) {
-    int i, j, i0, j0, i1, j1;
-    float x, y, s0, t0, s1, t1, dt0;
+void NS_Solver::advect(int B, Field d, Field d0, Field u, Field v) {
+    int I, J, I0, J0, I1, J1;
+    Factor x, y, s0, t0, s1, t1, dt0;
 
     dt0 = dt * N;
-    for (i = 1; i <= N; i++)
-        for (j = 1; j <= N; j++) {
-            x = i - dt0 * u[IX(i,j)];
-            y = j - dt0 * v[IX(i,j)];
+    for (I = 1; I <= N; I++)
+        for (J = 1; J <= N; J++) {
+            x = I - dt0 * u[I][J];
+            y = J - dt0 * v[I][J];
             
             if (x < 0.5) x = 0.5;
             if (x > N + 0.5) x = N + 0.5;
-            i0 = (int) x;
-            i1 = i0 + 1;
+            I0 = (int) x;
+            I1 = I0 + 1;
 
             if (y < 0.5) y = 0.5;
             if (y > N + 0.5) y = N + 0.5;
-            j0 = (int) y;
-            j1 = j0 + 1;
+            J0 = (int) y;
+            J1 = J0 + 1;
 
-            s1 = x - i0;
+            s1 = x - I0;
             s0 = 1 - s1;
-            t1 = y - j0;
+            t1 = y - J0;
             t0 = 1 - t1;
 
-            d[IX(i,j)] = s0 * (t0 * d0[IX(i0,j0)] + t1 * d0[IX(i0, j1)]) +
-                         s1 * (t0 * d0[IX(i1,j0)] + t1 * d0[IX(i1,j1)]);
+            d[I][J] = s0 * (t0 * d0[I0][J0] + t1 * d0[I0][J1]) +
+                      s1 * (t0 * d0[I1][J0] + t1 * d0[I1][J1]);
         }
 
-    set_bnd(b, d);
+    set_bnd(B, d);
 }
 
-void NS_Solver::project(float * u, float * v, float * p, float * div) {
-    int i, j, k;
-    float h = 1.0 / N;
+void NS_Solver::project(Field u, Field v, Field p, Field div) {
+    int I, J, K;
+    Factor H = 1.0 / N;
 
-    for (i = 1; i <= N; i++)
-        for (j = 1; j <= N; j++) {
-            div[IX(i,j)] = -0.5 * h * (u[IX(i+1, j)] - u[IX(i-1, j)] + v[IX(i,j+1)] - v[IX(i,j-1)]);
-            p[IX(i,j)] = 0;
+    for (I = 1; I <= N; I++)
+        for (J = 1; J <= N; J++) {
+            div[I][J] = -0.5 * H * (u[I+1][J] - u[I-1][J] + v[I][J+1] - v[I][J-1]);
+            p[I][J] = 0;
         }
 
     set_bnd(0, div);
     set_bnd(0, p);
 
-    for (k = 0; k < ITERS; k++) {
-        for (i = 1; i <= N; i++)
-            for (j = 1; j <= N; j++) {
-                p[IX(i,j)] = (div[IX(i,j)] + p[IX(i-1,j)] + p[IX(i+1,j)] + p[IX(i,j-1)] + p[IX(i,j+1)]) / 4;
+    for (K = 0; K < ITERS; K++) {
+        for (I = 1; I <= N; I++)
+            for (J = 1; J <= N; J++) {
+                p[I][J] = (div[I][J] + p[I-1][J] + p[I+1][J] + p[I][J-1] + p[I][J+1]) / 4;
             }
         set_bnd(0, p);
     }
 
-    for (i = 1; i <= N; i++)
-        for (j = 1; j <= N; j++) {
-            u[IX(i,j)] -= 0.5 * (p[IX(i+1,j)] - p[IX(i-1,j)]) / h;
-            v[IX(i,j)] -= 0.5 * (p[IX(i,j+1)] - p[IX(i,j-1)]) / h;
+    for (I = 1; I <= N; I++)
+        for (J = 1; J <= N; J++) {
+            u[I][J] -= 0.5 * (p[I+1][J] - p[I-1][J]) / H;
+            v[I][J] -= 0.5 * (p[I][J+1] - p[I][J-1]) / H;
         }
 
     set_bnd(1, u);
     set_bnd(2, v);
 }
 
-void NS_Solver::dens_step(float * x, float * x0, float * u, float * v) {
+void NS_Solver::dens_step(Field x, Field x0, Field u, Field v) {
     add_source(x, x0);
     F_SWAP(x0, x);
     diffuse(0, x, x0);
@@ -114,7 +114,7 @@ void NS_Solver::dens_step(float * x, float * x0, float * u, float * v) {
     advect(0, x, x0, u, v);
 }
 
-void NS_Solver::vel_step(float * u, float * v, float * u0, float * v0) {
+void NS_Solver::vel_step(Field u, Field v, Field u0, Field v0) {
     add_source(u, u0);
     add_source(v, v0);
     F_SWAP(u0, u);
@@ -130,7 +130,7 @@ void NS_Solver::vel_step(float * u, float * v, float * u0, float * v0) {
     project(u, v, u0, v0);
 }
 
-void NS_Solver::solver_step(int _N, float * dens, float * dens0, float * u, float * v, float * u0, float * v0) {
+void NS_Solver::solver_step(int _N, Field dens, Field dens0, Field u, Field v, Field u0, Field v0) {
     if (! correct_N(_N))
         throw Wrong_N();
 

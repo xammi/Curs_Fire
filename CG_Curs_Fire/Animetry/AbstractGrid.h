@@ -3,6 +3,11 @@
 
 #include "../includes.h"
 
+#define GEN_N 40
+
+typedef float FVal;
+typedef FVal ** Field;
+
 namespace Core {
 
 //-------------------------------------------------------------------------------------------------
@@ -22,39 +27,37 @@ protected:
 // engine utils
 //-------------------------------------------------------------------------------------------------
 template <typename T>
-void to_zero(int size, T * array) {
-    for (int i = 0; i < size; i++)
-        array[i] = 0;
+void print_debug(int N, T ** array) {
+    int N_1 = N + 1;
+    for (int I = 0; I <= N_1; I++) {
+        for (int J = 0; J <= N_1; J++)
+            qDebug("  %4.2f", array[I][J]);
+        qDebug("\n");
+    }
 }
 
 template <typename T>
-void print_debug(int size, T * array) {
-    for (int i = 0; i < size; i++)
-        qDebug() << array[i];
-}
+T get_min(int N, T ** array) {
+    int N_1 = N + 1;
+    T min = array[0][0];
 
-template <typename T>
-void assign(int size, T * src, T * array) {
-    for (int i = 0; i < size; i++)
-        array[i] = src[i];
-}
-
-template <typename T>
-float get_min(int size, T * array) {
-    T min = array[0];
-    for (int i = 1; i < size; i++)
-        if (min > array[i])
-            min = array[i];
+    for (int I = 0; I <= N_1; I++)
+        for (int J = 0; J <= N_1; J++)
+            if (min > array[I][J])
+                min = array[I][J];
 
     return min;
 }
 
 template <typename T>
-T get_max(int size, T * array) {
-    T max = array[0];
-    for (int i = 1; i < size; i++)
-        if (max < array[i])
-            max = array[i];
+T get_max(int N, T ** array) {
+    T max = array[0][0];
+    int N_1 = N + 1;
+
+    for (int I = 0; I <= N_1; I++)
+        for (int J = 0; J <= N_1; J++)
+            if (max < array[I][J])
+                max = array[I][J];
 
     return max;
 }

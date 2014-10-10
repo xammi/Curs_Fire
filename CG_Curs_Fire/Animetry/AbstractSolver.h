@@ -1,11 +1,13 @@
 #ifndef ASOLVER_H
 #define ASOLVER_H
 
-#include "../includes.h"
+#include "AbstractGrid.h"
+
+#define F_SWAP(x0, x) {Field tmp = x0; x0 = x; x = tmp;}
+
+typedef FVal Factor;
 
 namespace Core {
-
-#define F_SWAP(x0, x) {float * tmp = x0; x0 = x; x = tmp;}
 
 //-------------------------------------------------------------------------------------------------
 class AbstractSolver

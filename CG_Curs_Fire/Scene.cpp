@@ -104,6 +104,7 @@ void Scene::sortDraws(const Plane3D & plane) {
 void Scene::updateAnime() {
     for (Drawable * drawable : draws)
         drawable->updateByTimer();
+    QThreadPool::globalInstance()->waitForDone();
 }
 
 void Scene::specialKey() {

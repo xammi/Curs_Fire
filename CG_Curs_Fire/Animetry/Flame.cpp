@@ -3,7 +3,7 @@
 //-------------------------------------------------------------------------------------------------
 
 void Flame::initialize() {
-    this->N = 40;
+    this->N = GEN_N;
     this->solver = new NS_Solver(N, 0.01, 0.0002, 0.1);
     this->grid = new FlameGrid(N);
 
@@ -32,13 +32,13 @@ void Flame::draw(QPainter & painter, const Projector & projector, const Plane3D 
     int i, j, degree;
 
     QColor color;
-    float min = grid->min_dens();
-    float max = grid->max_dens();
+    FVal min = grid->min_dens();
+    FVal max = grid->max_dens();
 
     if (max - min == 0)
         return;
 
-    float factor = 255 / (max - min);
+    Factor factor = 255 / (max - min);
 
     double stepX = (rX - lX) / N,
            stepY = (rY -lY) / N,
@@ -61,7 +61,7 @@ void Flame::draw(QPainter & painter, const Projector & projector, const Plane3D 
                       Point3D(X, Y + stepY, Z + stepZ),
                       Point3D(X, Y, Z + stepZ) };
 
-            degree = qRound( (grid->density(N - j, i) - min) * factor );
+            degree = qRound( (grid->density(i, j) - min) * factor );
             color = w_yellow(degree);
             painter.setBrush(QBrush(color));
 
@@ -82,7 +82,7 @@ void Flame::draw(QPainter & painter, const Projector & projector, const Plane3D 
                        Point3D(X + stepX, Y + stepY, Z),
                        Point3D(X + stepX, Y, Z) };
 
-            degree = qRound( (grid->density(N - j, i) - min) * factor );
+            degree = qRound( (grid->density(i, j) - min) * factor );
             color = w_yellow(degree);
             painter.setBrush(QBrush(color));
 
@@ -116,40 +116,13 @@ QColor Flame::w_yellow(const int degree) const {
 }
 //-------------------------------------------------------------------------------------------------
 void FlameGrid::set_density_src() {
-    float POSIT = 20;
-
-    for (int I = N - 3; I <= N; I++)
-        for (int J = 5; J <= N - 5; J++) {
-            dens_src[IX(I, J)] = -POSIT;
-        }
+    FVal POSIT = 20;
 }
 
 void FlameGrid::set_velocity_src() {
-    float UP = -0.3;
-    float DOWN = 3;
-
-    for (int I = 0; I < 1; ++I)
-        for (int J = 1; J < N/2; ++J) {
-            v[IX(I,J)] = DOWN;
-            v[IX(I,N-J)] = -DOWN;
-        }
-
-    for (int I = 10; I <= 15; I++)
-        for (int J = 0; J <= 1; J++) {
-            u[IX(I,J)] = DOWN;
-            u[IX(I,N-J+1)] = DOWN;
-        }
-
-    for (int I = 10; I <= N; I++)
-        for (int J = 2; J <= N - 1; J++) {
-            u[IX(I,J)] = UP;
-        }
 }
 
 void FlameGrid::fluctuations() {
     set_density_src();
     set_velocity_src();
-
-    fill_random(u_src, -5., 5.);
-    fill_random(v_src, -1., 1.);
 }

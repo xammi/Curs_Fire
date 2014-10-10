@@ -10,62 +10,78 @@ NS_Grid::NS_Grid(const int _N) :
     uint T = time(NULL);
     qsrand(T);
 
-    set_conf();
+    set_fields();
 }
 
 NS_Grid::~NS_Grid() {
-    dispose_conf();
+    dispose_fields();
 }
 
-void NS_Grid::dispose_conf() {
-    if (u) delete [] u;
-    if (v) delete [] v;
-    if (dens) delete [] dens;
-
-    if (u_src) delete [] u_src;
-    if (v_src) delete [] v_src;
-    if (dens_src) delete [] dens_src;
+void NS_Grid::dispose_fields() {
+    dealloc(u);
+    dealloc(v);
+    dealloc(dens);
+    dealloc(u_src);
+    dealloc(v_src);
+    dealloc(dens_src);
 }
 
-void NS_Grid::set_conf() {
-    u = new float[size];
-    v = new float[size];
-    dens = new float[size];
+void NS_Grid::set_fields() {
+    u = alloc();
+    v = alloc();
+    dens = alloc();
+    u_src = alloc();
+    v_src = alloc();
+    dens_src = alloc();
+}
 
-    u_src = new float[size];
-    v_src = new float[size];
-    dens_src = new float[size];
-
-    if (!u || !v || !dens || !u_src || !v_src || !dens_src)
+Field NS_Grid::alloc() const {
+    Field result = new FVal * [N + 2];
+    if (! result)
         throw MemNotAlloc();
 
-    to_zero(size, u);
-    to_zero(size, v);
-    to_zero(size, dens);
-    to_zero(size, u_src);
-    to_zero(size, v_src);
-    to_zero(size, dens_src);
+    int N_1 = N + 1;
+    for (int I = 0; I <= N_1; ++I) {
+        result[I] = new FVal[N + 2];
+
+        if (! result[I])
+            throw MemNotAlloc();
+    }
+    return result;
+}
+
+void NS_Grid::dealloc(Field field) {
+    if (! field) return;
+
+    int N_1 = N + 1;
+    for (int I = 0; I <= N_1; ++I)
+        if (field[I])
+            delete [] field[I];
+
+    delete [] field;
 }
 
 float NS_Grid::density(int i, int j) const {
-    return dens[IX(i, j)];
+    return dens[i][j];
 }
 
 float NS_Grid::min_dens() const {
-    return get_min(size, dens);
+    return get_min(N, dens);
 }
 
 float NS_Grid::max_dens() const {
-    return get_max(size, dens);
+    return get_max(N, dens);
 }
 
-void NS_Grid::fill_random(float * src, float from, float to) {
-    float factor = to - from;
+void NS_Grid::fill_random(Field field, FVal from, FVal to) {
+    FVal factor = to - from;
+    int I, J;
 
-    for (int i = 0; i < size; i++) {
-         float num = qrand();
-         src[i] = num / RAND_MAX * factor + from;
-    }
+    for (I = 1; I <= N; I++)
+        for (J = 1; J <= N; J++) {
+            FVal num = qrand();
+            field[I][J] =  num / RAND_MAX * factor + from;
+        }
 }
 //-------------------------------------------------------------------------------------------------
 //-------------------------------------------------------------------------------------------------

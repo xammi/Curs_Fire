@@ -3,7 +3,7 @@
 //-------------------------------------------------------------------------------------------------
 
 void Smoke::initialize() {
-    this->N = 40;
+    this->N = GEN_N;
     this->solver = new NS_Solver(N, 0.0001, 0.002, 0.1);
     this->grid = new SmokeGrid(N);
 
@@ -33,13 +33,13 @@ void Smoke::draw(QPainter & painter, const Projector & projector, const Plane3D 
     int i, j, degree;
 
     QColor color;
-    float min = grid->min_dens();
-    float max = grid->max_dens();
+    FVal min = grid->min_dens();
+    FVal max = grid->max_dens();
 
     if (max - min == 0)
         return;
 
-    float factor = 255 / (max - min);
+    Factor factor = 255 / (max - min);
 
     double stepX = (rX - lX) / N,
            stepY = (rY -lY) / N,
@@ -62,7 +62,7 @@ void Smoke::draw(QPainter & painter, const Projector & projector, const Plane3D 
                       Point3D(X, Y + stepY, Z + stepZ),
                       Point3D(X, Y, Z + stepZ) };
 
-            degree = qRound( (grid->density(N - j, i) - min) * factor );
+            degree = qRound( (grid->density(i, j) - min) * factor );
             color = w_black(degree);
             painter.setBrush(QBrush(color));
 
@@ -83,7 +83,7 @@ void Smoke::draw(QPainter & painter, const Projector & projector, const Plane3D 
                        Point3D(X + stepX, Y + stepY, Z),
                        Point3D(X + stepX, Y, Z) };
 
-            degree = qRound( (grid->density(N - j, i) - min) * factor );
+            degree = qRound( (grid->density(i, j) - min) * factor );
             color = w_black(degree);
             painter.setBrush(QBrush(color));
 
@@ -118,27 +118,12 @@ QColor Smoke::w_black(const int degree) const {
 
 //-------------------------------------------------------------------------------------------------
 void SmokeGrid::set_density_src() {
-    for (int I = N - 3; I < N; I++)
-        for (int J = 5; J < N-5; J++)
-            dens_src[IX(I, J)] = 5;
 }
 
 void SmokeGrid::set_velocity_src() {
-    for (int I = 10; I <= N; I++)
-        for (int J = 1; J <= N; J++)
-            u[IX(I, J)] = -0.2;
-
-    for (int I = 35; I < 40; I++)
-        for (int J = 0; J <= 2; J++) {
-            u[IX(I, J)] = 1;
-            u[IX(I, N-J+1)] = 1;
-        }
 }
 
 void SmokeGrid::fluctuations() {
     set_density_src();
     set_velocity_src();
-
-
-    fill_random(v_src, -2., 2.);
 }
