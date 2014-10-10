@@ -124,6 +124,4 @@ void SmokeGrid::set_velocity_src() {
 }
 
 void SmokeGrid::fluctuations() {
-    set_density_src();
-    set_velocity_src();
 }

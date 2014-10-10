@@ -10,7 +10,7 @@ UserInterface::UserInterface(QWidget * parent) :
     ui->setupUi(this);
     this->adjustUi();
     scene->setDefault();
-    animeTimer = startTimer(60);
+    animeTimer = startTimer(50);
 }
 
 void UserInterface::adjustUi() {

@@ -4,7 +4,7 @@
 
 void Flame::initialize() {
     this->N = GEN_N;
-    this->solver = new NS_Solver(N, 0.01, 0.0002, 0.1);
+    this->solver = new NS_Solver(N, 0.01, 0.0002, 0.17);
     this->grid = new FlameGrid(N);
 
     grid->set_density_src();
@@ -117,12 +117,38 @@ QColor Flame::w_yellow(const int degree) const {
 //-------------------------------------------------------------------------------------------------
 void FlameGrid::set_density_src() {
     FVal POSIT = 20;
+
+    for (int I = 5; I <= N-4; I++)
+        for (int J = 1; J <= 3; J++) {
+            dens_src[I][J] = POSIT;
+        }
 }
 
 void FlameGrid::set_velocity_src() {
+    FVal UP = 0.3;
+    FVal DOWN = -1;
+
+    for (int I = 1; I < N/2; ++I)
+        for (int J = N - 3; J <= N; ++J) {
+            u[I][J] = DOWN/2;
+            u[N-I+1][J] = -DOWN/2;
+        }
+
+    for (int I = 0; I <= 2; I++)
+        for (int J = N-10; J <= N-4; J++) {
+            v[I][J] = DOWN;
+//            v[N-I+1][J] = DOWN;
+        }
+
+    for (int I = 3; I <= N-2; I++)
+        for (int J = 20; J <= N-10; J++) {
+            v[I][J] = UP;
+        }
 }
 
 void FlameGrid::fluctuations() {
     set_density_src();
     set_velocity_src();
+
+    fill_random(v_src, -3, 3);
 }

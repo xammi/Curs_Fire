@@ -2,7 +2,7 @@
 
 namespace Core {
 
-const int ITERS = 20;
+const int ITERS = 10;
 
 NS_Solver::NS_Solver(int _N, Factor _visc, Factor _diff, Factor _dt) :
     AbstractSolver(_N), visc(_visc), diff(_diff), dt(_dt)
@@ -10,8 +10,8 @@ NS_Solver::NS_Solver(int _N, Factor _visc, Factor _diff, Factor _dt) :
 //-------------------------------------------------------------------------------------------------
 void NS_Solver::add_source(Field field, Field source) {
     int I, J, N_1 = N + 1;
-    for (I = 1; I <= N; I++)
-        for (J = 1; J <= N; J++)
+    for (I = 0; I <= N_1; I++)
+        for (J = 0; J <= N_1; J++)
             field[I][J] += dt * source[I][J];
 }
 

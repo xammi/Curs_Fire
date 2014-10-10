@@ -3,7 +3,7 @@
 
 #include "../includes.h"
 
-#define GEN_N 40
+#define GEN_N 50
 
 typedef float FVal;
 typedef FVal ** Field;
