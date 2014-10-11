@@ -4,11 +4,13 @@
 
 void Smoke::initialize() {
     this->N = GEN_N;
-    this->solver = new NS_Solver(N, 0.0001, 0.002, 0.1);
-    this->grid = new SmokeGrid(N);
+    this->solver = new NS_Solver(N, transVal(0.01, 0.5, visc), transVal(0.0001, 0.01, diff), transVal(0.01, 0.05, dt));
 
-    grid->set_density_src();
-    grid->set_velocity_src();
+    SmokeGrid * grid = new SmokeGrid(N);
+    this->grid = grid;
+
+    grid->set_density_src(dens_src_power);
+    grid->set_velocity_src(v_up, v_side);
 }
 
 Smoke::Smoke() :
@@ -33,13 +35,13 @@ void Smoke::draw(QPainter & painter, const Projector & projector, const Plane3D 
     int i, j, degree;
 
     QColor color;
-    FVal min = grid->min_dens();
-    FVal max = grid->max_dens();
+    float min = grid->min_dens();
+    float max = grid->max_dens();
 
     if (max - min == 0)
         return;
 
-    Factor factor = 255 / (max - min);
+    float factor = 255 / (max - min);
 
     double stepX = (rX - lX) / N,
            stepY = (rY -lY) / N,
@@ -94,19 +96,21 @@ void Smoke::draw(QPainter & painter, const Projector & projector, const Plane3D 
     }
 }
 
-void Smoke::run() {
-    solver->solver_step(N, *grid);
-    grid->fluctuations();
-}
-
 void Smoke::updateByTimer() {
-    this->setAutoDelete(false);
-    QThreadPool::globalInstance()->start(this);
+    solver->solver_step(N, *grid);
+
+    grid->set_density_src(dens_src_power);
+    grid->set_velocity_src(v_up, v_side);
+    grid->fluctuations(v_flucts, u_flucts);
 }
 
 void Smoke::specialAction() {
-    grid->set_density_src();
-    grid->set_velocity_src();
+    grid->set_density_src(dens_src_power);
+    grid->set_velocity_src(v_up, v_side);
+}
+
+void Smoke::withSet() {
+    solver->set_params(transVal(0.01, 0.5, visc), transVal(0.0001, 0.01, diff), transVal(0.01, 0.05, dt));
 }
 
 QColor Smoke::w_black(const int degree) const {
@@ -117,11 +121,3 @@ QColor Smoke::w_black(const int degree) const {
 }
 
 //-------------------------------------------------------------------------------------------------
-void SmokeGrid::set_density_src() {
-}
-
-void SmokeGrid::set_velocity_src() {
-}
-
-void SmokeGrid::fluctuations() {
-}

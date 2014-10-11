@@ -11,10 +11,12 @@ namespace Core {
 class NS_Solver : public AbstractSolver
 {
 public:
-    NS_Solver(int _N, Factor _visc, Factor _diff, Factor _dt);
+    NS_Solver(int _N, float _visc, float _diff, float _dt);
 
     void solver_step(int _N, const NS_Grid &);
     void solver_step(int _N, Field x, Field x0, Field u, Field v, Field u0, Field v0);
+
+    void set_params(float _visc, float _diff, float _dt);
 
 protected:
     // general solver utils

@@ -3,12 +3,28 @@
 
 #include "../includes.h"
 
-#define GEN_N 50
+#define GEN_N 40
 
-typedef float FVal;
-typedef FVal ** Field;
+float transVal(float left, float right, int value);
 
 namespace Core {
+
+typedef long FVal;
+typedef FVal ** Field;
+
+// Special macroses
+#define FPP 9
+#define X1_0 (1<<FPP)
+
+// conversions for freal
+#define I2X(x) ((FVal)((x)<<FPP))
+#define F2X(x) ((FVal)((x)*X1_0))
+#define X2I(x) ((int)((x)>>FPP))
+#define X2F(x) ((float)(x)/X1_0)
+
+// replacements for the multiplication and division
+#define XM(x, y) ((FVal)(((x)*(y))>>FPP))
+#define XD(x, y) ((FVal)(((x)<<FPP)/(y)))
 
 //-------------------------------------------------------------------------------------------------
 class AbstractGrid
@@ -31,7 +47,7 @@ void print_debug(int N, T ** array) {
     int N_1 = N + 1;
     for (int I = 0; I <= N_1; I++) {
         for (int J = 0; J <= N_1; J++)
-            qDebug("  %4.2f", array[I][J]);
+            qDebug("  %4.2f", X2F(array[I][J]));
         qDebug("\n");
     }
 }

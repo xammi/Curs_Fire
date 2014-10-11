@@ -18,12 +18,15 @@ SOURCES += main.cpp\
     Geometry/Drawable.cpp \
     Geometry/Obstacle.cpp \
     Geometry/Prims3d.cpp \
-    Animetry/AbstractGrid.cpp \
-    Animetry/AbstractSolver.cpp \
-    Animetry/NS_Grid.cpp \
-    Animetry/NS_Solver.cpp \
+    Core/AbstractGrid.cpp \
+    Core/AbstractSolver.cpp \
+    Core/NS_Grid.cpp \
+    Core/NS_Solver.cpp \
     Animetry/Flame.cpp \
-    Animetry/Smoke.cpp
+    Animetry/Smoke.cpp \
+    Animetry/SmokeGrid.cpp \
+    Animetry/FlameGrid.cpp \
+    Animetry/Adjustable.cpp
 
 HEADERS  += UserInterface.h \
     includes.h \
@@ -31,11 +34,15 @@ HEADERS  += UserInterface.h \
     Geometry/Drawable.h \
     Geometry/Obstacle.h \
     Geometry/Prims3d.h \
-    Animetry/AbstractGrid.h \
-    Animetry/AbstractSolver.h \
-    Animetry/NS_Grid.h \
-    Animetry/NS_Solver.h \
+    Core/AbstractGrid.h \
+    Core/AbstractSolver.h \
+    Core/NS_Grid.h \
+    Core/NS_Solver.h \
     Animetry/Flame.h \
-    Animetry/Smoke.h
+    Animetry/Smoke.h \
+    Animetry/SmokeGrid.h \
+    Animetry/FlameGrid.h \
+    Task.h \
+    Animetry/Adjustable.h
 
 FORMS    += UserInterface.ui

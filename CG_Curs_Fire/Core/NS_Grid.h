@@ -16,16 +16,16 @@ public:
     NS_Grid(const int);
     virtual ~NS_Grid();
 
-    virtual void set_density_src() = 0;
-    virtual void set_velocity_src() = 0;
-    virtual void fluctuations() = 0;
+    virtual void set_density_src(int) = 0;
+    virtual void set_velocity_src(int, int) = 0;
+    virtual void fluctuations(int, int) = 0;
 
-    FVal density(int i, int j) const;
-    FVal min_dens() const;
-    FVal max_dens() const;
+    float density(int i, int j) const;
+    float min_dens() const;
+    float max_dens() const;
 
 protected:
-    void fill_random(Field src, FVal from, FVal to);
+    void fill_random(Field src, float from, float to);
 
     void set_fields();
     void dispose_fields();

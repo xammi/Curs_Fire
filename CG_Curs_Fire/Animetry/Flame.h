@@ -2,29 +2,18 @@
 #define FLAME_H
 
 #include "../Geometry/Drawable.h"
-#include "NS_Grid.h"
-#include "NS_Solver.h"
+#include "../Core/NS_Solver.h"
+
+#include "FlameGrid.h"
+#include "Adjustable.h"
 
 using Core::NS_Grid;
+using Core::FlameGrid;
 using Core::NS_Solver;
 
 //-------------------------------------------------------------------------------------------------
-class FlameGrid : public NS_Grid
-{
-    friend class NS_Solver;
 
-public:
-    FlameGrid(const int _N) : NS_Grid(_N) {}
-    ~FlameGrid() {}
-
-    void set_density_src();
-    void set_velocity_src();
-    void fluctuations();
-};
-
-//-------------------------------------------------------------------------------------------------
-
-class Flame : public Drawable, public QRunnable
+class Flame : public Drawable, public Adjustable
 {
 public:
     Flame();
@@ -35,7 +24,7 @@ public:
     void updateByTimer();
     void specialAction();
 
-    void run();
+    void withSet();
 
 protected:
     void initialize();

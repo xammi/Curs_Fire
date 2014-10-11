@@ -2,29 +2,19 @@
 #define SMOKE_H
 
 #include "../Geometry/Drawable.h"
-#include "NS_Grid.h"
-#include "NS_Solver.h"
+#include "../Core/NS_Solver.h"
+
 #include "Flame.h"
+#include "SmokeGrid.h"
+#include "Adjustable.h"
 
 using Core::NS_Grid;
+using Core::SmokeGrid;
 using Core::NS_Solver;
 
 //-------------------------------------------------------------------------------------------------
-class SmokeGrid : public NS_Grid
-{
-    friend class NS_Solver;
 
-public:
-    SmokeGrid(const int _N) : NS_Grid(_N) {}
-    ~SmokeGrid() {}
-
-    void set_density_src();
-    void set_velocity_src();
-    void fluctuations();
-};
-//-------------------------------------------------------------------------------------------------
-
-class Smoke : public Drawable, public QRunnable
+class Smoke : public Drawable, public Adjustable
 {
 public:
     Smoke();
@@ -35,7 +25,7 @@ public:
     void updateByTimer();
     void specialAction();
 
-    void run();
+    void withSet();
 
 protected:
     void initialize();
@@ -45,6 +35,7 @@ private:
     Flame * flame;
     NS_Solver * solver;
     NS_Grid * grid;
+
     int N;
 };
 

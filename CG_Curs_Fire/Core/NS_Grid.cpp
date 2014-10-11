@@ -62,25 +62,27 @@ void NS_Grid::dealloc(Field field) {
 }
 
 float NS_Grid::density(int i, int j) const {
-    return dens[i][j];
+    return X2F(dens[i][j]);
 }
 
 float NS_Grid::min_dens() const {
-    return get_min(N, dens);
+    return X2F(get_min(N, dens));
 }
 
 float NS_Grid::max_dens() const {
-    return get_max(N, dens);
+    return X2F(get_max(N, dens));
 }
 
-void NS_Grid::fill_random(Field field, FVal from, FVal to) {
-    FVal factor = to - from;
-    int I, J;
+void NS_Grid::fill_random(Field field, float ffrom, float fto) {
+    FVal from = F2X(ffrom), to = F2X(fto),
+         factor = to - from,
+         MAX_RAND = I2X(RAND_MAX);
 
+    int I, J;
     for (I = 1; I <= N; I++)
         for (J = 1; J <= N; J++) {
-            FVal num = qrand();
-            field[I][J] =  num / RAND_MAX * factor + from;
+            FVal num = I2X(qrand());
+            field[I][J] = XD(num, XM(MAX_RAND, factor)) + from;
         }
 }
 //-------------------------------------------------------------------------------------------------

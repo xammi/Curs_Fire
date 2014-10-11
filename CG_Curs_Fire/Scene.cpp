@@ -16,7 +16,7 @@ Scene::Scene(QObject * parent) :
     cameraY = Point3D(0, 1, userZ);
 
     center = Point3D(0, 0, 0);
-    scale = 1;
+    scale = 1;    
 }
 
 Scene::~Scene() {
@@ -31,9 +31,14 @@ void Scene::setScreen(const QSize & screen) {
 
 void Scene::setDefault() {
     Flame * centralFlame = new Flame(-100, 100, -100, 100, -100, 100);
+    Smoke * centralSmoke = new Smoke(-100, 100, 90, 290, -100, 100, centralFlame);
 
     draws.append(centralFlame);
-    draws.append(new Smoke(-100, 100, 90, 290, -100, 100, centralFlame));
+    draws.append(centralSmoke);
+
+    adjusts.append(centralFlame);
+    adjusts.append(centralSmoke);
+    paramReciever = 0;
 }
 
 void Scene::draw(QPainter & painter) {
@@ -41,15 +46,23 @@ void Scene::draw(QPainter & painter) {
     Vector3D singleX = (cameraX - cameraPos) * scale,
              singleY = (cameraY - cameraPos) * scale;
 
-    auto projector = [ & ] (const Point3D & point)->QPoint {
+    auto projector = [ plane, singleX, singleY, cameraPos ] (const Point3D & point)->QPoint {
         Point3D proj = plane.project(point);
         Vector3D V = proj - cameraPos;
         return QPoint(destructBy(V, singleX), destructBy(V, singleY));
     };
 
     sortDraws(plane);
+
+//    auto callTask = [ & painter, projector, plane ] (Drawable * drawable) {
+//        drawable->draw(painter, projector, plane);
+//    };
+
+//    QThreadPool * pool = QThreadPool::globalInstance();
     for (Drawable * drawable : draws)
+//        pool->start(new Task(drawable, callTask));
         drawable->draw(painter, projector, plane);
+//    pool->waitForDone();
 }
 
 void Scene::cameraMotion(const Camera camera) {
@@ -98,16 +111,49 @@ void Scene::sortDraws(const Plane3D & plane) {
     );
 
     for (int I = 0; I < dists.size(); ++I)
-        draws[I] = dists[I].first;
+        draws[I] = dists[I].first;    
 }
 
 void Scene::updateAnime() {
-    for (Drawable * drawable : draws)
+    auto taskCall = [] (Drawable * drawable) {
         drawable->updateByTimer();
-    QThreadPool::globalInstance()->waitForDone();
+    };
+
+    QThreadPool * pool = QThreadPool::globalInstance();
+    for (Drawable * drawable : draws)
+        pool->start(new Task(drawable, taskCall));
+
+    pool->waitForDone();
 }
 
 void Scene::specialKey() {
     for (Drawable * drawable : draws)
         drawable->specialAction();
+}
+//-------------------------------------------------------------------------------------------------
+void Scene::setParamReciever() {
+    QString rbn = sender()->objectName();
+    rbn = rbn.remove(0, rbn.indexOf('_') + 1);
+
+    if (rbn == "flame1")
+        this->paramReciever = 0;
+    else if (rbn == "smoke1")
+        this->paramReciever = 1;
+
+    emit updateParams(adjusts[paramReciever]->getParams());
+}
+
+void Scene::paramChanged(int value) {
+    QString reg = sender()->objectName();
+    reg = reg.remove(0, reg.indexOf('_') + 1);
+
+    adjusts[paramReciever]->setParam(reg, value);
+}
+
+void Scene::saveAdjusts() {
+    adjusts[paramReciever]->save();
+}
+void Scene::restoreAdjusts() {
+    adjusts[paramReciever]->restore();
+    emit updateParams(adjusts[paramReciever]->getParams());
 }

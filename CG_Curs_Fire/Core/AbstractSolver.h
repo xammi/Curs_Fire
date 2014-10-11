@@ -3,11 +3,9 @@
 
 #include "AbstractGrid.h"
 
-#define F_SWAP(x0, x) {Field tmp = x0; x0 = x; x = tmp;}
+namespace Core {
 
 typedef FVal Factor;
-
-namespace Core {
 
 //-------------------------------------------------------------------------------------------------
 class AbstractSolver
