@@ -24,6 +24,8 @@ public:
     float min_dens() const;
     float max_dens() const;
 
+    void to_zero();
+
 protected:
     void fill_random(Field src, float from, float to);
 
@@ -32,6 +34,8 @@ protected:
 
     Field alloc() const;
     void dealloc(Field);
+
+    void to_zero(Field);
 
 protected:
     Field u;

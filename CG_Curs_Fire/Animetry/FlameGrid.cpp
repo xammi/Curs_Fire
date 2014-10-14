@@ -3,7 +3,7 @@
 namespace Core {
 //-------------------------------------------------------------------------------------------------
 void FlameGrid::set_density_src(int dens_src_power) {
-    FVal POSIT = F2X(transVal(-20, 40, dens_src_power));
+    FVal POSIT = F2X(transVal(-80, 80, dens_src_power));
 
     for (int I = 5; I <= N-4; I++)
         for (int J = 1; J <= 3; J++) {
@@ -33,9 +33,12 @@ void FlameGrid::set_velocity_src(int v_up, int v_side) {
         }
 }
 
-void FlameGrid::fluctuations(int v_flucts, int) {
+void FlameGrid::fluctuations(int v_flucts, int u_flucts) {
     float vf = transVal(0.1, 5, v_flucts);
     fill_random(v_src, -vf, vf);
+
+    float uf = transVal(0.0, 0.1, u_flucts);
+    fill_random(u_src, -uf, uf);
 }
 //-------------------------------------------------------------------------------------------------
 } // namespace Core

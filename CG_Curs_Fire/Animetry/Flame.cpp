@@ -8,7 +8,9 @@ void Flame::initialize() {
     FlameGrid * grid = new FlameGrid(N);
     this->grid = grid;
 
-    this->solver = new NS_Solver(N, transVal(0.01, 0.5, visc), transVal(0.0001, 0.01, diff), transVal(0.01, 0.05, dt));
+    this->solver = new NS_Solver(N, transVal(0.01, 0.5, visc),
+                                 transVal(0.001, 0.01, diff),
+                                 transVal(0.005, 0.025, dt));
 
     grid->set_density_src(dens_src_power);
     grid->set_velocity_src(v_up, v_side);
@@ -96,7 +98,7 @@ void Flame::draw(QPainter & painter, const Projector & projector, const Plane3D 
     }
 }
 
-void Flame::updateByTimer() {
+void Flame::updateByTimer() {    
     solver->solver_step(N, *grid);
 
     grid->set_density_src(dens_src_power);
@@ -105,12 +107,11 @@ void Flame::updateByTimer() {
 }
 
 void Flame::specialAction() {
-    grid->set_density_src(dens_src_power);
-    grid->set_velocity_src(v_up, v_side);
+    grid->to_zero();
 }
 
 void Flame::withSet() {
-    solver->set_params(transVal(0.01, 0.5, visc), transVal(0.0001, 0.01, diff), transVal(0.01, 0.05, dt));
+    solver->set_params(transVal(0.01, 0.5, visc), transVal(0.001, 0.01, diff), transVal(0.005, 0.025, dt));
 }
 
 QColor Flame::w_yellow(const int degree) const {

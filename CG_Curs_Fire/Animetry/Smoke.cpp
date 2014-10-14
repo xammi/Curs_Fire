@@ -4,7 +4,9 @@
 
 void Smoke::initialize() {
     this->N = GEN_N;
-    this->solver = new NS_Solver(N, transVal(0.01, 0.5, visc), transVal(0.0001, 0.01, diff), transVal(0.01, 0.05, dt));
+    this->solver = new NS_Solver(N, transVal(0.01, 0.5, visc),
+                                    transVal(0.0001, 0.01, diff),
+                                    transVal(0.005, 0.025, dt));
 
     SmokeGrid * grid = new SmokeGrid(N);
     this->grid = grid;
@@ -105,12 +107,13 @@ void Smoke::updateByTimer() {
 }
 
 void Smoke::specialAction() {
-    grid->set_density_src(dens_src_power);
-    grid->set_velocity_src(v_up, v_side);
+    grid->to_zero();
 }
 
 void Smoke::withSet() {
-    solver->set_params(transVal(0.01, 0.5, visc), transVal(0.0001, 0.01, diff), transVal(0.01, 0.05, dt));
+    solver->set_params(transVal(0.01, 0.5, visc),
+                       transVal(0.0001, 0.01, diff),
+                       transVal(0.005, 0.025, dt));
 }
 
 QColor Smoke::w_black(const int degree) const {

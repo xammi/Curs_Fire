@@ -79,7 +79,7 @@ void UserInterface::keyPressEvent(QKeyEvent * event) {
         break;
         case Qt::Key_Z: scene->cameraMotion(Camera::BACK);
         break;
-        case Qt::Key_Space: scene->specialKey();
+        case Qt::Key_Q: scene->specialKey();
         break;
     }
     this->update();

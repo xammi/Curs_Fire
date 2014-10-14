@@ -115,15 +115,16 @@ void Scene::sortDraws(const Plane3D & plane) {
 }
 
 void Scene::updateAnime() {
-    auto taskCall = [] (Drawable * drawable) {
-        drawable->updateByTimer();
-    };
+//    auto taskCall = [] (Drawable * drawable) {
+//        drawable->updateByTimer();
+//    };
 
-    QThreadPool * pool = QThreadPool::globalInstance();
+//    QThreadPool * pool = QThreadPool::globalInstance();
     for (Drawable * drawable : draws)
-        pool->start(new Task(drawable, taskCall));
+        drawable->updateByTimer();
+//        pool->start(new Task(drawable, taskCall));
 
-    pool->waitForDone();
+//    pool->waitForDone();
 }
 
 void Scene::specialKey() {

@@ -46,6 +46,9 @@ Field NS_Grid::alloc() const {
 
         if (! result[I])
             throw MemNotAlloc();
+
+        for (int J = 0; J <= N_1; ++J)
+            result[I][J] = 0;
     }
     return result;
 }
@@ -82,7 +85,27 @@ void NS_Grid::fill_random(Field field, float ffrom, float fto) {
     for (I = 1; I <= N; I++)
         for (J = 1; J <= N; J++) {
             FVal num = I2X(qrand());
-            field[I][J] = XD(num, XM(MAX_RAND, factor)) + from;
+            if (factor)
+                field[I][J] = XD(num, XM(MAX_RAND, factor)) + from;
+            else
+                field[I][J] = 0;
+        }
+}
+
+void NS_Grid::to_zero() {
+    to_zero(u);
+    to_zero(v);
+    to_zero(dens);
+    to_zero(u_src);
+    to_zero(v_src);
+    to_zero(dens_src);
+}
+
+void NS_Grid::to_zero(Field field) {
+    int I, J;
+    for (I = 1; I <= N; I++)
+        for (J = 1; J <= N; J++) {
+            field[I][J] = 0;
         }
 }
 //-------------------------------------------------------------------------------------------------
