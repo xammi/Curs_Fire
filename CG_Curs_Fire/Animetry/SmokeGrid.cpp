@@ -24,5 +24,12 @@ void SmokeGrid::fluctuations(int v_flucts, int) {
     float vf = transVal(0.1, 3, v_flucts);
     fill_random(u_src, -vf, vf);
 }
+
+QColor SmokeGrid::color(const int degree) const {
+    if (degree < 1 || degree > 255)
+        return QColor(255, 255, 255, 0);
+    int icolor = degree;
+    return QColor(icolor, icolor, icolor, icolor);
+}
 //-------------------------------------------------------------------------------------------------
 } // namespace Core

@@ -1,12 +1,13 @@
-#include "Flame.h"
+#include "Fluid.h"
 
-//-------------------------------------------------------------------------------------------------
 
-void Flame::initialize() {
+void Fluid::initialize(const Type type) {
     this->N = GEN_N;
 
-    FlameGrid * grid = new FlameGrid(N);
-    this->grid = grid;
+    if (type == FLAME)
+        this->grid = new FlameGrid(N);
+    else if (type == SMOKE)
+        this->grid = new SmokeGrid(N);
 
     this->solver = new NS_Solver(N, transVal(0.01, 0.5, visc),
                                  transVal(0.001, 0.01, diff),
@@ -16,24 +17,24 @@ void Flame::initialize() {
     grid->set_velocity_src(v_up, v_side);
 }
 
-Flame::Flame() :
+Fluid::Fluid() :
     Drawable()
 {
-    this->initialize();
+    this->initialize(FLAME);
 }
 
-Flame::Flame(double lX, double rX, double lY, double rY, double lZ, double rZ)  :
+Fluid::Fluid(double lX, double rX, double lY, double rY, double lZ, double rZ, Type type)  :
     Drawable(lX, rX, lY,rY, lZ, rZ)
 {
-    this->initialize();
+    this->initialize(type);
 }
 
-Flame::~Flame() {
+Fluid::~Fluid() {
     if (solver) delete solver;
     if (grid) delete grid;
 }
 //-------------------------------------------------------------------------------------------------
-void Flame::draw(QPainter & painter, const Projector & projector, const Plane3D &) {
+void Fluid::draw(QPainter & painter, const Projector & projector, const Plane3D &) {
     int i, j, degree;
 
     QColor color;
@@ -67,7 +68,7 @@ void Flame::draw(QPainter & painter, const Projector & projector, const Plane3D 
                       Point3D(X, Y, Z + stepZ) };
 
             degree = qRound( (grid->density(i, j) - min) * factor );
-            color = w_yellow(degree);
+            color = grid->color(degree);
             painter.setBrush(QBrush(color));
 
             for (int k = 0; k < 4; k++)
@@ -88,7 +89,7 @@ void Flame::draw(QPainter & painter, const Projector & projector, const Plane3D 
                        Point3D(X + stepX, Y, Z) };
 
             degree = qRound( (grid->density(i, j) - min) * factor );
-            color = w_yellow(degree);
+            color = grid->color(degree);
             painter.setBrush(QBrush(color));
 
             for (int k = 0; k < 4; k++)
@@ -98,7 +99,7 @@ void Flame::draw(QPainter & painter, const Projector & projector, const Plane3D 
     }
 }
 
-void Flame::updateByTimer() {    
+void Fluid::updateByTimer() {
     solver->solver_step(N, *grid);
 
     grid->set_density_src(dens_src_power);
@@ -106,17 +107,12 @@ void Flame::updateByTimer() {
     grid->fluctuations(v_flucts, u_flucts);
 }
 
-void Flame::specialAction() {
+void Fluid::specialAction() {
     grid->to_zero();
 }
 
-void Flame::withSet() {
-    solver->set_params(transVal(0.01, 0.5, visc), transVal(0.001, 0.01, diff), transVal(0.005, 0.025, dt));
+void Fluid::withSet() {
+    solver->set_params(transVal(0.01, 0.5, visc),
+                       transVal(0.001, 0.01, diff),
+                       transVal(0.005, 0.025, dt));
 }
-
-QColor Flame::w_yellow(const int degree) const {
-    if (degree < 1)
-        return QColor(255, 255, 255, 0);
-    return QColor(200, 140, 0, degree);
-}
-//-------------------------------------------------------------------------------------------------

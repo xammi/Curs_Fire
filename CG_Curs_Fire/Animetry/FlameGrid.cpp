@@ -40,5 +40,11 @@ void FlameGrid::fluctuations(int v_flucts, int u_flucts) {
     float uf = transVal(0.0, 0.1, u_flucts);
     fill_random(u_src, -uf, uf);
 }
+
+QColor FlameGrid::color(const int degree) const {
+    if (degree < 1)
+        return QColor(255, 255, 255, 0);
+    return QColor(200, 140, 0, degree);
+}
 //-------------------------------------------------------------------------------------------------
 } // namespace Core

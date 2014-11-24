@@ -1,24 +1,29 @@
-#ifndef FLAME_H
-#define FLAME_H
+#ifndef FLUID_H
+#define FLUID_H
 
 #include "../Geometry/Drawable.h"
 #include "../Core/NS_Solver.h"
 
 #include "FlameGrid.h"
+#include "SmokeGrid.h"
 #include "Adjustable.h"
 
 using Core::NS_Grid;
 using Core::FlameGrid;
+using Core::SmokeGrid;
 using Core::NS_Solver;
 
 //-------------------------------------------------------------------------------------------------
 
-class Flame : public Drawable, public Adjustable
+class Fluid : public Drawable, public Adjustable
 {
 public:
-    Flame();
-    Flame(double lX, double rX, double lY, double rY, double lZ, double rZ);
-    ~Flame();
+    enum Type { FLAME, SMOKE };
+
+public:
+    Fluid();
+    Fluid(double lX, double rX, double lY, double rY, double lZ, double rZ, Type);
+    ~Fluid();
 
     void draw(QPainter &, const Projector &, const Plane3D &);
     void updateByTimer();
@@ -27,8 +32,7 @@ public:
     void withSet();
 
 protected:
-    void initialize();
-    QColor w_yellow(const int) const;
+    void initialize(const Type type);
 
 private:
     NS_Solver * solver;
@@ -38,4 +42,4 @@ private:
 
 //-------------------------------------------------------------------------------------------------
 
-#endif // FLAME_H
+#endif // FLUID_H

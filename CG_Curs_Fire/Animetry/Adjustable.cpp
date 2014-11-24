@@ -7,7 +7,7 @@ int Adjustable::obj_counter = 1;
 Adjustable::Adjustable() :
     visc(1), diff(1), dt(1), dens_src_power(1), v_up(1), v_side(1), v_flucts(1), u_flucts(1)
 {
-    filename = QString::number(obj_counter) + ".adj";
+    filename = ":" + QString::number(obj_counter) + ".adj";
     obj_counter++;
     this->restore();
 }

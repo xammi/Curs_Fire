@@ -16,6 +16,8 @@ public:
     void set_density_src(int);
     void set_velocity_src(int, int);
     void fluctuations(int, int);
+
+    QColor color(const int degree) const;
 };
 //-------------------------------------------------------------------------------------------------
 } // namespace Core

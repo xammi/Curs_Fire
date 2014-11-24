@@ -20,6 +20,8 @@ public:
     virtual void set_velocity_src(int, int) = 0;
     virtual void fluctuations(int, int) = 0;
 
+    virtual QColor color(const int degree) const = 0;
+
     float density(int i, int j) const;
     float min_dens() const;
     float max_dens() const;

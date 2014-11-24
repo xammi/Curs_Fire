@@ -22,11 +22,10 @@ SOURCES += main.cpp\
     Core/AbstractSolver.cpp \
     Core/NS_Grid.cpp \
     Core/NS_Solver.cpp \
-    Animetry/Flame.cpp \
-    Animetry/Smoke.cpp \
     Animetry/SmokeGrid.cpp \
     Animetry/FlameGrid.cpp \
-    Animetry/Adjustable.cpp
+    Animetry/Adjustable.cpp \
+    Animetry/Fluid.cpp
 
 HEADERS  += UserInterface.h \
     includes.h \
@@ -38,11 +37,13 @@ HEADERS  += UserInterface.h \
     Core/AbstractSolver.h \
     Core/NS_Grid.h \
     Core/NS_Solver.h \
-    Animetry/Flame.h \
-    Animetry/Smoke.h \
     Animetry/SmokeGrid.h \
     Animetry/FlameGrid.h \
     Task.h \
-    Animetry/Adjustable.h
+    Animetry/Adjustable.h \
+    Animetry/Fluid.h
 
 FORMS    += UserInterface.ui
+
+RESOURCES += \
+    adjusts.qrc

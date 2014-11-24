@@ -1,8 +1,7 @@
 #include "Scene.h"
 
 #include "Geometry/Obstacle.h"
-#include "Animetry/Flame.h"
-#include "Animetry/Smoke.h"
+#include "Animetry/Fluid.h"
 
 const float SINGLE_CAM_ANGLE = 0.05;
 const float CAM_ZOOM = 1.01;
@@ -30,8 +29,8 @@ void Scene::setScreen(const QSize & screen) {
 }
 
 void Scene::setDefault() {
-    Flame * centralFlame = new Flame(-100, 100, -100, 100, -100, 100);
-    Smoke * centralSmoke = new Smoke(-100, 100, 90, 290, -100, 100, centralFlame);
+    Fluid * centralFlame = new Fluid(-100, 100, -100, 100, -100, 100, Fluid::FLAME);
+    Fluid * centralSmoke = new Fluid(-100, 100, 90, 290, -100, 100, Fluid::SMOKE);
 
     draws.append(centralFlame);
     draws.append(centralSmoke);
