@@ -42,9 +42,40 @@ void FlameGrid::fluctuations(int v_flucts, int u_flucts) {
 }
 
 QColor FlameGrid::color(const int degree) const {
-    if (degree < 1)
-        return QColor(255, 255, 255, 0);
-    return QColor(200, 140, 0, degree);
+    int min = 0,
+        deg_unu = 150,
+        deg_du = 215,
+        max = 255;
+
+    if (degree <= min) {
+        return QColor(max, max, max, min);
+    }
+    else if (degree <= deg_unu) {
+        return QColor(200, 140, min, degree + 105);
+    }
+    else if (degree <= deg_du) {
+        int unu = 200,
+            du = 106,
+            alpha = 25;
+
+        double deg_diff = qAbs(deg_du - deg_unu),
+               diff = qAbs(unu - du);
+
+        int B_channel = unu - qRound(diff / deg_diff * (degree - deg_unu));
+        return QColor(max, B_channel, min, alpha);
+    }
+    else if (degree <= max) {
+        int unu = 106,
+            du = 34,
+            alpha = 235;
+
+        double deg_diff = qAbs(max - deg_du),
+               diff = qAbs(du - unu);
+
+        int B_channel = unu - qRound(diff / deg_diff * (degree - deg_du));
+        return QColor(max, B_channel, min, alpha);
+    }
+    return QColor(200, 140, min, max);
 }
 //-------------------------------------------------------------------------------------------------
 } // namespace Core

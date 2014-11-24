@@ -1,7 +1,7 @@
 #include "Fluid.h"
 
 
-void Fluid::initialize(const Type type) {
+void Fluid::initialize() {
     this->N = GEN_N;
 
     if (type == FLAME)
@@ -18,15 +18,15 @@ void Fluid::initialize(const Type type) {
 }
 
 Fluid::Fluid() :
-    Drawable()
+    Drawable(), type(FLAME)
 {
-    this->initialize(FLAME);
+    this->initialize();
 }
 
 Fluid::Fluid(double lX, double rX, double lY, double rY, double lZ, double rZ, Type type)  :
-    Drawable(lX, rX, lY,rY, lZ, rZ)
+    Drawable(lX, rX, lY,rY, lZ, rZ), type(type)
 {
-    this->initialize(type);
+    this->initialize();
 }
 
 Fluid::~Fluid() {
@@ -35,61 +35,49 @@ Fluid::~Fluid() {
 }
 //-------------------------------------------------------------------------------------------------
 void Fluid::draw(QPainter & painter, const Projector & projector, const Plane3D &) {
-    int i, j, degree;
-
-    QColor color;
-    float min = grid->min_dens();
-    float max = grid->max_dens();
+    float min = grid->min_dens(),
+          max = grid->max_dens();
 
     if (max - min == 0)
         return;
 
     float factor = 255 / (max - min);
 
-    double stepX = (rX - lX) / N,
-           stepY = (rY -lY) / N,
+    painter.setPen(QPen(Qt::white, 0, Qt::NoPen));
+
+    double midZ = lZ + (rZ - lZ) / 2;
+    draw_XY(painter, projector, midZ, min, factor);
+
+    double midX = lX + (rX - lX) / 2;
+    draw_ZY(painter, projector, midX, min, factor);
+
+    if (type == FLAME) {
+        draw_XZ(painter, projector, lY, min, factor);
+    }
+    else if (type == SMOKE) {
+        double midY = lY + (rY - lY) / 2;
+        draw_XZ(painter, projector, midY, min, factor);
+    }
+}
+
+void Fluid::draw_ZY(QPainter & painter, const Projector & projector, double X, float min, float factor) {
+    double stepY = (rY -lY) / N,
            stepZ = (rZ - lZ) / N;
 
-
-    painter.setPen(QPen(Qt::white, 0, Qt::NoPen));
-    Points3D points;
     QPolygon polygon;
     polygon.resize(4);
 
-    i = 0;
-    double X = lX + (rX - lX) / 2;
+    int i = 1, j;
     for (double Z = lZ; Z < rZ; Z += stepZ, i++) {
-        j = 0;
+        j = 1;
         for (double Y = lY; Y < rY - 10; Y += stepY, j++) {
+            Points3D points = { Point3D(X, Y, Z),
+                                Point3D(X, Y + stepY, Z),
+                                Point3D(X, Y + stepY, Z + stepZ),
+                                Point3D(X, Y, Z + stepZ) };
 
-            points = {Point3D(X, Y, Z),
-                      Point3D(X, Y + stepY, Z),
-                      Point3D(X, Y + stepY, Z + stepZ),
-                      Point3D(X, Y, Z + stepZ) };
-
-            degree = qRound( (grid->density(i, j) - min) * factor );
-            color = grid->color(degree);
-            painter.setBrush(QBrush(color));
-
-            for (int k = 0; k < 4; k++)
-                polygon[k] = projector(points[k]);
-            painter.drawPolygon(polygon);
-        }
-    }
-
-    i = 0;
-    double Z = lZ + (rZ - lZ) / 2;
-    for (double X = lX; X < rX; X += stepX, i++) {
-        j = 0;
-        for (double Y = lY; Y < rY - 10; Y += stepY, j++) {
-
-            points = { Point3D(X, Y, Z),
-                       Point3D(X, Y + stepY, Z),
-                       Point3D(X + stepX, Y + stepY, Z),
-                       Point3D(X + stepX, Y, Z) };
-
-            degree = qRound( (grid->density(i, j) - min) * factor );
-            color = grid->color(degree);
+            int degree = qRound( (grid->density(i, j) - min) * factor );
+            QColor color = grid->color(degree);
             painter.setBrush(QBrush(color));
 
             for (int k = 0; k < 4; k++)
@@ -98,6 +86,63 @@ void Fluid::draw(QPainter & painter, const Projector & projector, const Plane3D 
         }
     }
 }
+
+void Fluid::draw_XY(QPainter & painter, const Projector & projector, double Z, float min, float factor) {
+    double stepX = (rX - lX) / N,
+           stepY = (rY -lY) / N;
+
+    QPolygon polygon;
+    polygon.resize(4);
+
+    int i = 1, j;
+    for (double X = lX; X < rX; X += stepX, i++) {
+        j = 1;
+        for (double Y = lY; Y < rY - 10; Y += stepY, j++) {
+            Points3D points = { Point3D(X, Y, Z),
+                                Point3D(X, Y + stepY, Z),
+                                Point3D(X + stepX, Y + stepY, Z),
+                                Point3D(X + stepX, Y, Z) };
+
+            int degree = qRound( (grid->density(i, j) - min) * factor );
+            QColor color = grid->color(degree);
+            painter.setBrush(QBrush(color));
+
+            for (int k = 0; k < 4; k++)
+                polygon[k] = projector(points[k]);
+            painter.drawPolygon(polygon);
+        }
+    }
+}
+
+void Fluid::draw_XZ(QPainter & painter, const Projector & projector, double Y, float min, float factor) {
+    double stepX = (rX - lX) / N,
+           stepZ = (rZ - lZ) / N;
+
+    QPolygon polygon;
+    polygon.resize(4);
+
+    // TODO: i,j controlling
+    int i = 1, j;
+
+    for (double X = lX; X < rX; X += stepX, i++) {
+        j = 1;
+        for (double Z = lZ; Z < rZ; Z += stepZ) {
+            Points3D points = { Point3D(X, Y, Z),
+                                Point3D(X, Y, Z + stepZ),
+                                Point3D(X + stepX, Y, Z + stepZ),
+                                Point3D(X + stepX, Y, Z) };
+
+            int degree = qRound( (grid->density(i, j) - min) * factor );
+            QColor color = grid->color(degree);
+            painter.setBrush(QBrush(color));
+
+            for (int k = 0; k < 4; k++)
+                polygon[k] = projector(points[k]);
+            painter.drawPolygon(polygon);
+        }
+    }
+}
+
 
 void Fluid::updateByTimer() {
     solver->solver_step(N, *grid);

@@ -17,6 +17,7 @@ using Core::NS_Solver;
 
 class Fluid : public Drawable, public Adjustable
 {
+
 public:
     enum Type { FLAME, SMOKE };
 
@@ -32,9 +33,14 @@ public:
     void withSet();
 
 protected:
-    void initialize(const Type type);
+    void initialize();
+
+    void draw_XY(QPainter &, const Projector &, double Z, float min, float factor);
+    void draw_ZY(QPainter &, const Projector &, double X, float min, float factor);
+    void draw_XZ(QPainter &, const Projector &, double Y, float min, float factor);
 
 private:
+    Type type;
     NS_Solver * solver;
     NS_Grid * grid;
     int N;

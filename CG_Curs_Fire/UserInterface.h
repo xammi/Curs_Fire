@@ -8,6 +8,7 @@
 #include <QMainWindow>
 #include <QKeyEvent>
 #include <QTimerEvent>
+#include <QPixmap>
 
 namespace Ui {
     class UserInterface;
@@ -36,6 +37,7 @@ public:
 private:
     void adjustUi();
 
+    QImage pixmap;
     Ui::UserInterface * ui;    
     Scene * scene;
     Timer animeTimer;
