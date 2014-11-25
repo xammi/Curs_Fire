@@ -56,7 +56,7 @@ QColor FlameGrid::color(const int degree) const {
     else if (degree <= deg_du) {
         int unu = 200,
             du = 106,
-            alpha = 25;
+            alpha = 235;
 
         double deg_diff = qAbs(deg_du - deg_unu),
                diff = qAbs(unu - du);

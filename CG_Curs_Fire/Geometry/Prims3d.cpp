@@ -46,6 +46,20 @@ Point3D operator+(const Point3D & point,const Vector3D & direct) {
                    point.Z + direct.Z);
 }
 
+Point3D operator+=(Point3D & point, const Vector3D & direct) {
+    point.X += direct.X;
+    point.Y += direct.Y;
+    point.Z += direct.Z;
+    return point;
+}
+
+Point3D operator-=(Point3D & point, const Vector3D & direct) {
+    point.X -= direct.X;
+    point.Y -= direct.Y;
+    point.Z -= direct.Z;
+    return point;
+}
+
 Point3D operator -(const Point3D & point, const Vector3D & direct) {
     return Point3D(point.X - direct.X,
                    point.Y - direct.Y,
@@ -131,4 +145,36 @@ double scalMul(const Vector3D & V1, const Vector3D & V2) {
 double destructBy(const Vector3D & V1, const Vector3D & V2) {
     double lenV2 = V2.abs();
     return scalMul(V1, V2) / lenV2 / lenV2;
+}
+//-------------------------------------------------------------------------------------------------
+Polygon3D::Polygon3D(const Point3D & point, const Vector3D & vect1, const Vector3D & vect2) :
+    points(QVector<Point3D>(4, point))
+{
+    points[1] += vect1;
+    points[2] = points[1] + vect2;
+    points[3] += vect2;
+}
+
+void Polygon3D::shift(const Vector3D & direct) {
+    for (Point3D & point : points) {
+        point += direct;
+    }
+}
+
+void Polygon3D::shift_X(double dX) {
+    for (Point3D & point : points) {
+        point.X += dX;
+    }
+}
+
+void Polygon3D::shift_Y(double dY) {
+    for (Point3D & point : points) {
+        point.Y += dY;
+    }
+}
+
+void Polygon3D::shift_Z(double dZ) {
+    for (Point3D & point : points) {
+        point.Z += dZ;
+    }
 }

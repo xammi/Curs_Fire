@@ -35,9 +35,12 @@ public:
 protected:
     void initialize();
 
-    void draw_XY(QPainter &, const Projector &, double Z, float min, float factor);
-    void draw_ZY(QPainter &, const Projector &, double X, float min, float factor);
-    void draw_XZ(QPainter &, const Projector &, double Y, float min, float factor);
+    // float: min, float: factor
+    void draw_XY(QPainter &, const Projector &, double Z, float, float);
+    void draw_ZY(QPainter &, const Projector &, double X, float, float);
+    void draw_XZ(QPainter &, const Projector &, double Y, float, float);
+
+    void drawPolygon(const Polygon3D &, QPainter &, const Projector &);
 
 private:
     Type type;

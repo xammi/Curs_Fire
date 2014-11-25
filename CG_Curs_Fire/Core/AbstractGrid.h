@@ -3,7 +3,7 @@
 
 #include "../includes.h"
 
-#define GEN_N 40
+#define GEN_N 80
 
 float transVal(float left, float right, int value);
 

@@ -62,6 +62,7 @@ void UserInterface::paintEvent(QPaintEvent *) {
     painter.scale(1, -1);
 
     painter.setRenderHint(QPainter::Antialiasing, true);
+    painter.setRenderHint(QPainter::SmoothPixmapTransform, true);
 
     scene->setScreen(ui->view->size());
     scene->draw(painter);
