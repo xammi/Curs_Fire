@@ -12,6 +12,8 @@
 #include <QPainter>
 #include <QPoint>
 #include <QPointF>
+#include <QPixmap>
+#include <QImage>
 
 #include <functional>
 using std::function;

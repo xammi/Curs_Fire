@@ -32,8 +32,8 @@ void Scene::setDefault() {
     Fluid * centralFlame = new Fluid(-100, 100, -100, 100, -100, 100, Fluid::FLAME);
     Fluid * centralSmoke = new Fluid(-100, 100, 90, 290, -100, 100, Fluid::SMOKE);
 
-    Obstacle * log_1 = new Obstacle();
-    Obstacle * log_2 = new Obstacle();
+    Obstacle * log_1 = new Obstacle(-100, 100, -140, -100, -20, 20, Obstacle::BIRCH);
+    Obstacle * log_2 = new Obstacle(-20, 20, -140, -100, -100, 100, Obstacle::BIRCH);
 
     draws.append(centralFlame);
     draws.append(centralSmoke);
@@ -111,7 +111,7 @@ void Scene::sortDraws(const Plane3D & plane) {
     }
 
     qSort(dists.begin(), dists.end(),
-          [] (DrawDist & A, DrawDist & B) { return A.second < B.second; }
+          [] (DrawDist & A, DrawDist & B) { return A.second > B.second; }
     );
 
     for (int I = 0; I < dists.size(); ++I)

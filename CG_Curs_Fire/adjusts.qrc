@@ -1,6 +1,0 @@
-<RCC>
-    <qresource prefix="/">
-        <file alias="1.adj">Resources/1.adj</file>
-        <file alias="2.adj">Resources/2.adj</file>
-    </qresource>
-</RCC>

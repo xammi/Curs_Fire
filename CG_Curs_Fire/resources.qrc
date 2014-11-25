@@ -1,0 +1,11 @@
+<RCC>
+    <qresource prefix="/adjusts">
+        <file alias="1.adj">Adjusts/1.adj</file>
+        <file alias="2.adj">Adjusts/2.adj</file>
+    </qresource>
+    <qresource prefix="/textures">
+        <file alias="stone">Textures/stone_16.jpg</file>
+        <file alias="oak">Textures/wood_28.jpg</file>
+        <file alias="birch">Textures/wood_4.jpg</file>
+    </qresource>
+</RCC>

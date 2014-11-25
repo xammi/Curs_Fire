@@ -46,4 +46,4 @@ HEADERS  += UserInterface.h \
 FORMS    += UserInterface.ui
 
 RESOURCES += \
-    adjusts.qrc
+    resources.qrc
