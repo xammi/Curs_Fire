@@ -32,8 +32,8 @@ void Scene::setDefault() {
     Fluid * centralFlame = new Fluid(-100, 100, -100, 100, -100, 100, Fluid::FLAME);
     Fluid * centralSmoke = new Fluid(-100, 100, 90, 290, -100, 100, Fluid::SMOKE);
 
-    Obstacle * log_1 = new Obstacle(-100, 100, -140, -100, -20, 20, Obstacle::BIRCH);
-    Obstacle * log_2 = new Obstacle(-20, 20, -140, -100, -100, 100, Obstacle::BIRCH);
+    Obstacle * log_1 = new Obstacle(-100, 100, -140, -100, -20, 20, Obstacle::OAK);
+    Obstacle * log_2 = new Obstacle(-20, 20, -140, -100, -100, 100, Obstacle::OAK);
 
     draws.append(centralFlame);
     draws.append(centralSmoke);

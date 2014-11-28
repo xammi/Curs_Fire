@@ -56,7 +56,7 @@ void Fluid::draw(QPainter & painter, const Projector & projector, const Plane3D 
     }
     else if (type == SMOKE) {
         double midY = lY + (rY - lY) / 2;
-        draw_XZ(painter, projector, midY, min, factor);
+        //draw_XZ(painter, projector, midY, min, factor);
     }
 }
 

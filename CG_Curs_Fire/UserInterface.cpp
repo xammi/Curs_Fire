@@ -17,6 +17,7 @@ UserInterface::UserInterface(QWidget * parent) :
     smokes = { ui->rbn_smoke1 };
 
     this->adjustUi();
+    this->setEffects();
     scene->restoreAdjusts();
 }
 
@@ -41,6 +42,13 @@ void UserInterface::adjustUi() {
     flames[0]->setChecked(true);
 }
 
+void UserInterface::setEffects() {
+    QGraphicsBlurEffect * blur = new QGraphicsBlurEffect();
+    blur->setBlurHints(QGraphicsBlurEffect::AnimationHint);
+    blur->setBlurRadius(15);
+    ui->view->setGraphicsEffect(blur);
+}
+
 UserInterface::~UserInterface() {
     delete ui;
 }
@@ -54,6 +62,7 @@ void UserInterface::timerEvent(QTimerEvent * event) {
 
 void UserInterface::paintEvent(QPaintEvent *) {
     QPainter painter(this);
+
     painter.translate(ui->view->pos());
     painter.fillRect(ui->view->rect(), QBrush(Qt::white));
     painter.setClipRect(ui->view->rect());

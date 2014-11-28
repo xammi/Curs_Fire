@@ -9,6 +9,7 @@
 #include <QKeyEvent>
 #include <QTimerEvent>
 #include <QPixmap>
+#include <QGraphicsBlurEffect>
 
 namespace Ui {
     class UserInterface;
@@ -36,6 +37,7 @@ public:
 
 private:
     void adjustUi();
+    void setEffects();
 
     QImage pixmap;
     Ui::UserInterface * ui;    
