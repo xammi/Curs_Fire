@@ -5,7 +5,8 @@
 UserInterface::UserInterface(QWidget * parent) :
     QMainWindow(parent),
     ui(new Ui::UserInterface),
-    scene(new Scene(this))
+    scene(new Scene(this)),
+    animeLaunched(false)
 {
     ui->setupUi(this);
     scene->setDefault();
@@ -40,6 +41,8 @@ void UserInterface::adjustUi() {
 
     this->setWindowState(Qt::WindowMaximized);
     flames[0]->setChecked(true);
+
+    connect(ui->btn_launch, SIGNAL(pressed()), SLOT(launchOrPause()));
 }
 
 void UserInterface::setEffects() {
@@ -53,8 +56,12 @@ UserInterface::~UserInterface() {
     delete ui;
 }
 //-------------------------------------------------------------------------------------------------
+void UserInterface::launchOrPause() {
+    animeLaunched = ! animeLaunched;
+}
+
 void UserInterface::timerEvent(QTimerEvent * event) {
-    if (event->timerId() == animeTimer) {
+    if (event->timerId() == animeTimer && animeLaunched) {
         scene->updateAnime();
         this->update();
     }

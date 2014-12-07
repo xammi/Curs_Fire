@@ -26,6 +26,7 @@ private slots:
     void showException(Exception &);
     void showMessage(QString);
     void updateParams(const QVector<int> & params);
+    void launchOrPause();
 
 public:
     explicit UserInterface(QWidget * parent = 0);
@@ -47,6 +48,8 @@ private:
     QVector<QSlider *> sliders;
     QVector<QRadioButton *> flames;
     QVector<QRadioButton *> smokes;
+
+    bool animeLaunched;
 };
 //-------------------------------------------------------------------------------------------------
 

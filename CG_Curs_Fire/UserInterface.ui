@@ -53,14 +53,14 @@
         <item>
          <widget class="QRadioButton" name="rbn_flame1">
           <property name="text">
-           <string>Flame</string>
+           <string>Огонь</string>
           </property>
          </widget>
         </item>
         <item>
          <widget class="QRadioButton" name="rbn_smoke1">
           <property name="text">
-           <string>Smoke</string>
+           <string>Дым</string>
           </property>
          </widget>
         </item>
@@ -74,7 +74,7 @@
         <item>
          <widget class="QLabel" name="lbl_visc">
           <property name="text">
-           <string>Viscosity:</string>
+           <string>Вязкость:</string>
           </property>
          </widget>
         </item>
@@ -88,7 +88,7 @@
           </property>
           <property name="minimumSize">
            <size>
-            <width>200</width>
+            <width>260</width>
             <height>0</height>
            </size>
           </property>
@@ -106,7 +106,7 @@
         <item>
          <widget class="QLabel" name="lbl_diff">
           <property name="text">
-           <string>Diffusion:</string>
+           <string>Диффузия:</string>
           </property>
          </widget>
         </item>
@@ -120,7 +120,7 @@
           </property>
           <property name="minimumSize">
            <size>
-            <width>200</width>
+            <width>260</width>
             <height>0</height>
            </size>
           </property>
@@ -152,7 +152,7 @@
           </property>
           <property name="minimumSize">
            <size>
-            <width>200</width>
+            <width>260</width>
             <height>0</height>
            </size>
           </property>
@@ -170,7 +170,7 @@
         <item>
          <widget class="QLabel" name="lbl_dens_src">
           <property name="text">
-           <string>Density source:</string>
+           <string>Источник вещества:</string>
           </property>
          </widget>
         </item>
@@ -184,7 +184,7 @@
           </property>
           <property name="minimumSize">
            <size>
-            <width>200</width>
+            <width>260</width>
             <height>0</height>
            </size>
           </property>
@@ -202,7 +202,7 @@
         <item>
          <widget class="QLabel" name="lbl_v_up">
           <property name="text">
-           <string>Up velocity:</string>
+           <string>Скорость подъема:</string>
           </property>
          </widget>
         </item>
@@ -216,7 +216,7 @@
           </property>
           <property name="minimumSize">
            <size>
-            <width>200</width>
+            <width>260</width>
             <height>0</height>
            </size>
           </property>
@@ -234,7 +234,7 @@
         <item>
          <widget class="QLabel" name="lbl_v_side">
           <property name="text">
-           <string>Side velocity:</string>
+           <string>Боковые скорости:</string>
           </property>
          </widget>
         </item>
@@ -248,7 +248,7 @@
           </property>
           <property name="minimumSize">
            <size>
-            <width>200</width>
+            <width>260</width>
             <height>0</height>
            </size>
           </property>
@@ -266,7 +266,7 @@
         <item>
          <widget class="QLabel" name="lbl_v_flucts">
           <property name="text">
-           <string>Fluctuations (OY):</string>
+           <string>Флуктуации (OY):</string>
           </property>
          </widget>
         </item>
@@ -280,7 +280,7 @@
           </property>
           <property name="minimumSize">
            <size>
-            <width>200</width>
+            <width>260</width>
             <height>0</height>
            </size>
           </property>
@@ -298,7 +298,7 @@
         <item>
          <widget class="QLabel" name="lbl_u_flucts">
           <property name="text">
-           <string>Fluctuations (OX):</string>
+           <string>Флуктуации (OX):</string>
           </property>
          </widget>
         </item>
@@ -312,7 +312,7 @@
           </property>
           <property name="minimumSize">
            <size>
-            <width>200</width>
+            <width>260</width>
             <height>0</height>
            </size>
           </property>
@@ -339,18 +339,25 @@
           <item>
            <widget class="QPushButton" name="btn_save">
             <property name="text">
-             <string>Save</string>
+             <string>Сохранить</string>
             </property>
            </widget>
           </item>
           <item>
            <widget class="QPushButton" name="btn_restore">
             <property name="text">
-             <string>Restore</string>
+             <string>Загрузить</string>
             </property>
            </widget>
           </item>
          </layout>
+        </item>
+        <item>
+         <widget class="QPushButton" name="btn_launch">
+          <property name="text">
+           <string>Запуск / Пауза</string>
+          </property>
+         </widget>
         </item>
         <item>
          <spacer name="spc">
